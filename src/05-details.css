@@ -1,0 +1,132 @@
+/* ==========================================================================
+   05. MOVIE & TV DETAIL PAGE (APPLE tvOS OVERHAUL)
+   ========================================================================== */
+
+/* Main Detail Hero Container */
+.detailPageWrapperContainer {
+    background: transparent !important;
+}
+
+/* White Solid Apple Play Button */
+.btnPlay {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+    border-radius: var(--radius-pill) !important;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25) !important;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.btnPlay:hover,
+.btnPlay:hover * {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 22px rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Secondary Frosted Glass Buttons (Trailer, Favorite, Watched) */
+.detailButton {
+    border-radius: var(--radius-pill) !important;
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: var(--blur-light) !important;
+    -webkit-backdrop-filter: var(--blur-light) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+    font-weight: 500 !important;
+    transition: all var(--transition-fast) !important;
+}
+
+.detailButton:hover {
+    transform: scale(1.05) !important;
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+    color: #ffffff !important;
+}
+
+/* Aligned Metadata Chips Row (Rotten Tomatoes, IMDb, Year, Rating, Runtime) */
+.itemMiscInfo,
+.mainDetailButtons + .itemMiscInfo,
+.detailPageWrapperContainer .itemMiscInfo,
+.detailPagePrimaryContainer .itemMiscInfo {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px 10px !important;
+    margin: 14px 0 !important;
+}
+
+.itemMiscInfo > *,
+.mediaInfoItem,
+.starRatingContainer,
+.endsAtText,
+div[class*="criticRating"],
+div[class*="communityRating"],
+span[class*="itemMiscInfo"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 28px !important;
+    line-height: 28px !important;
+    padding: 2px 10px !important;
+    margin: 0 !important;
+    border-radius: var(--radius-sm) !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--glass-border) !important;
+    backdrop-filter: var(--blur-light) !important;
+    -webkit-backdrop-filter: var(--blur-light) !important;
+    font-size: 0.85em !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    vertical-align: middle !important;
+}
+
+.itemMiscInfo img,
+.mediaInfoItem img {
+    height: 16px !important;
+    width: auto !important;
+    margin-right: 6px !important;
+    vertical-align: middle !important;
+}
+
+/* Season Selector & Dropdown Fix */
+.seasonTabs,
+.seasonsList,
+.detailPageWrapperContainer .selectContainer,
+div[data-role="controlgroup"] {
+    position: relative !important;
+    z-index: 100 !important;
+    pointer-events: auto !important;
+}
+
+/* Metadata Panels & Tables */
+.itemDetailGridContainer,
+.detailPageWrapperContainer .detailContainer,
+div[class*="mediaInfoAttribute"],
+.itemDetailsInfoBlock,
+table.detailTable {
+    background-color: var(--glass-bg-base) !important;
+    backdrop-filter: var(--blur-medium) !important;
+    -webkit-backdrop-filter: var(--blur-medium) !important;
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: var(--glass-specular-top) !important;
+    padding: 16px !important;
+}
+
+table.detailTable tr, 
+table.detailTable td {
+    border-bottom: 1px solid var(--glass-border-subtle) !important;
+}
+
+/* Cast & Crew Cards */
+.personCard .cardBox {
+    border-radius: var(--radius-md) !important;
+    transition: transform var(--transition-normal), box-shadow 0.3s ease !important;
+}
+
+.personCard:hover .cardBox {
+    transform: translateY(-5px) scale(1.04) !important;
+    box-shadow: var(--shadow-card) !important;
+}

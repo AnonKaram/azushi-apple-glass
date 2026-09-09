@@ -1,0 +1,27 @@
+/* ==========================================================================
+   09. SEASON EPISODE LISTS & TABLE ROWS
+   ========================================================================== */
+
+.listItem {
+    border-radius: var(--radius-md) !important;
+    margin: 6px 0 !important;
+    transition: background-color var(--transition-fast), transform var(--transition-fast) !important;
+}
+
+.listItem:hover {
+    background-color: var(--glass-bg-subtle) !important;
+    transform: translateX(4px) !important;
+}
+
+.listItem-border {
+    border-color: var(--glass-border-subtle) !important;
+}
+
+.listItemImage {
+    border-radius: var(--radius-sm) !important;
+    overflow: hidden !important;
+}
+
+.listItemBodyText {
+    color: rgba(255, 255, 255, 0.7) !important;
+}

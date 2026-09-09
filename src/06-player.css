@@ -1,0 +1,55 @@
+/* ==========================================================================
+   06. VIDEO & AUDIO PLAYER OSD (FLOATING GLASS CONTROLS)
+   ========================================================================== */
+
+/* Video Player Floating Bottom HUD */
+.videoOsdBottom .osdControls {
+    background-color: var(--glass-bg-elevated) !important;
+    backdrop-filter: var(--blur-heavy) !important;
+    -webkit-backdrop-filter: var(--blur-heavy) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--glass-specular-top), var(--shadow-floating-hud) !important;
+    margin: 0 24px 24px 24px !important;
+    padding: 10px 20px !important;
+}
+
+/* Player Seekbar */
+.videoOsdBottom .sliderContainer {
+    padding: 10px 0 !important;
+}
+
+.mdl-slider-background-lower {
+    background-color: #ffffff !important;
+    border-radius: var(--radius-pill) !important;
+}
+
+.mdl-slider-background-upper {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    border-radius: var(--radius-pill) !important;
+}
+
+.mdl-slider::-webkit-slider-thumb {
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+    transform: scale(1.2) !important;
+}
+
+/* Volume Slider & HUD */
+.volumeSliderContainer {
+    background: transparent !important;
+}
+
+/* Audio Player Bottom Dock */
+.nowPlayingBar {
+    background-color: var(--glass-bg-elevated) !important;
+    backdrop-filter: var(--blur-heavy) !important;
+    -webkit-backdrop-filter: var(--blur-heavy) !important;
+    border-top: 1px solid var(--glass-border) !important;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+.nowPlayingBarInfoContainer .nowPlayingImage {
+    border-radius: var(--radius-sm) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}

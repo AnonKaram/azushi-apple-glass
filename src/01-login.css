@@ -1,0 +1,36 @@
+/* ==========================================================================
+01. LOGIN & SPLASH SCREEN
+========================================================================== */
+#loginPage {
+background-color: #08080a !important;
+background-image: radial-gradient(circle at 50% 20%, rgba(30, 30, 45, 0.6) 0%, rgba(8, 8, 10, 0.95) 75%) !
+}
+#loginPage .padded-left.padded-right.padded-bottom-page {
+background: var(--glass-bg-base) !important;
+backdrop-filter: var(--blur-heavy) !important;
+-webkit-backdrop-filter: var(--blur-heavy) !important;
+border: 1px solid var(--glass-border) !important;
+border-radius: var(--radius-lg) !important;
+box-shadow: var(--glass-specular-top), var(--shadow-modal) !important;
+padding: 2.5em !important;
+max-width: 24em !important;
+margin: auto !important;
+}
+#loginPage .squareCard {
+border-radius: var(--radius-md) !important;
+background: var(--glass-bg-subtle) !important;
+border: 1px solid var(--glass-border) !important;
+transition: transform 0.3s var(--apple-ease), box-shadow 0.3s var(--apple-ease) !important;
+}
+#loginPage .squareCard:hover {
+transform: scale(1.05) !important;
+box-shadow: var(--shadow-card-hover) !important;
+border-color: var(--glass-border-hover) !important;
+}
+#loginPage .btnForgotPassword {
+color: rgba(255, 255, 255, 0.6) !important;
+font-size: 0.85em !important;
+}
+#loginPage .btnForgotPassword:hover {
+color: #ffffff !important;
+}

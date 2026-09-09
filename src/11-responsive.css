@@ -1,0 +1,29 @@
+/* ==========================================================================
+   11. MOBILE RESPONSIVENESS & BOTTOM APP BAR
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Mobile Floating Header adjustments */
+    .skinHeader {
+        padding: 0 8px !important;
+    }
+
+    .pageTitleWithDefaultLogo::after, 
+    .viewMenuBar .viewMenuBar-logo::after {
+        display: none !important; /* Avoid header clipping on small screens */
+    }
+
+    /* Floating bottom navigation bar */
+    .viewMenuBar-bottom {
+        background-color: var(--glass-bg-elevated) !important;
+        backdrop-filter: var(--blur-heavy) !important;
+        -webkit-backdrop-filter: var(--blur-heavy) !important;
+        border-top: 1px solid var(--glass-border) !important;
+    }
+
+    /* Player OSD compact mode */
+    .videoOsdBottom .osdControls {
+        margin: 0 10px 10px 10px !important;
+        padding: 8px 12px !important;
+    }
+}

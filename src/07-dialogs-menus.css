@@ -1,0 +1,57 @@
+/* ==========================================================================
+   07. SIDE DRAWER, MODALS & CONTEXT MENUS
+   ========================================================================== */
+
+/* Main Navigation Side Drawer */
+.mainDrawer {
+    background-color: rgba(16, 16, 22, 0.82) !important;
+    backdrop-filter: var(--blur-heavy) !important;
+    -webkit-backdrop-filter: var(--blur-heavy) !important;
+    border-right: 1px solid var(--glass-border) !important;
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mainDrawer-scrollContainer {
+    padding: 16px 8px !important;
+}
+
+.navMenuOption {
+    border-radius: var(--radius-md) !important;
+    margin: 3px 0 !important;
+    transition: background-color var(--transition-fast) !important;
+}
+
+.navMenuOption:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+.navMenuOption-selected {
+    background-color: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Popups, Modals & Action Sheets */
+.dialog {
+    background-color: rgba(18, 18, 26, 0.82) !important;
+    backdrop-filter: var(--blur-heavy) !important;
+    -webkit-backdrop-filter: var(--blur-heavy) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: var(--glass-specular-top), var(--shadow-modal) !important;
+    border-radius: var(--radius-lg) !important;
+}
+
+/* Context Menus */
+.actionsheet-not-fullscreen {
+    background-color: rgba(20, 20, 28, 0.88) !important;
+    backdrop-filter: var(--blur-heavy) !important;
+    -webkit-backdrop-filter: var(--blur-heavy) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-modal) !important;
+}
+
+.actionSheetMenuItem:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+}

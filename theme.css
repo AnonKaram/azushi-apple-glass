@@ -1,0 +1,18 @@
+/* ==========================================================================
+AZUSHI - APPLE tvOS "LIQUID GLASS" THEME
+Author: azushi
+Version: 1.0.0
+Compatible with Jellyfin 10.10+ / Jellyfin 12
+========================================================================== */
+@import url("./src/00-variables.css");
+@import url("./src/01-login.css");
+@import url("./src/02-typography.css");
+@import url("./src/03-header.css");
+@import url("./src/04-cards.css");
+@import url("./src/05-details.css");
+@import url("./src/06-player.css");
+@import url("./src/07-dialogs-menus.css");
+@import url("./src/08-forms-inputs.css");
+@import url("./src/09-lists-episodes.css");
+@import url("./src/10-special-plugins.css");
+@import url("./src/11-responsive.css");
