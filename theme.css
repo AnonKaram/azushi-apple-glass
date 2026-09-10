@@ -1,7 +1,7 @@
 /* ==========================================================================
    AZUSHI APPLE GLASS THEME FOR JELLYFIN
    Architecture: Apple tvOS Glassmorphic Dark Design System
-   Fixed: Detail Page Layout, Poster Clearance, Fullscreen Backdrop & Typography (4)
+   Fixed: Detail Page Layout, Poster Clearance, Fullscreen Backdrop & Typography (5)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -134,7 +134,7 @@ body, html {
     transform: scale(0.95) !important;
 }
 
-/* Apple tvOS Floating Pill Tab Navigation Bar */
+/* Apple tvOS Floating Pill Tab Navigation Bar - FIXED: Hides completely when empty on detail pages */
 .headerTabsSection {
     background: transparent !important;
     display: flex !important;
@@ -142,6 +142,15 @@ body, html {
     align-items: center !important;
     width: 100% !important;
     margin-top: 6px !important;
+}
+
+.headerTabsSection.hide,
+.headerTabsSection[style*="display: none"],
+.headerTabs:empty,
+.headerTabs:not(:has(.emby-tab-button)),
+.emby-tabs-slider:empty,
+#itemDetailPage .headerTabsSection {
+    display: none !important;
 }
 
 .headerTabs,
@@ -350,25 +359,27 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   4. FULLSCREEN APPLE TV BACKDROP ENGINE (FIX: NO HARSH MID-PAGE CUTOFF)
+   4. FULLSCREEN APPLE TV BACKDROP ENGINE (FIX: FULL BLEED ACROSS ENTIRE TOP)
    -------------------------------------------------------------------------- */
-/* Strip any default dark backgrounds that block the backdrop at top */
+/* Clear ancestor filters and transforms so fixed backdrops fill the viewport */
 #itemDetailPage,
 .itemDetailPage,
+.mainAnimatedPages,
+.page,
+.pageContainer,
 .detailPageWrapperContainer,
 .detailRibbon,
 .detailRibbon.padded-left,
-.detailRibbon.padded-right,
-.infoWrapper,
-.detailPagePrimaryContainer,
-.detailPageSecondaryContainer {
+.detailRibbon.padded-right {
     background: transparent !important;
     background-color: transparent !important;
+    transform: none !important;
+    contain: none !important;
+    perspective: none !important;
 }
 
-/* Backdrop Canvas: Anchored from top 0, filling the entire viewport */
-.backgroundContainer,
-.backdropContainer {
+/* Fixed fullscreen background canvas */
+.backgroundContainer {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -382,7 +393,7 @@ body, html {
     pointer-events: none !important;
 }
 
-/* The actual backdrop image: smooth specular fade from top to bottom */
+/* Backdrop artwork begins at the top (under topbar) and softly fades towards the base */
 .backdropImage,
 .backgroundContainer.withBackdrop,
 .detailPageBackdrop,
@@ -395,32 +406,29 @@ body, html {
     background-size: cover !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
-    filter: brightness(0.65) saturate(120%) !important;
+    filter: brightness(0.68) saturate(125%) !important;
     z-index: -1 !important;
     pointer-events: none !important;
     mask-image: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.95) 0%, 
-        rgba(0, 0, 0, 0.90) 35%, 
-        rgba(0, 0, 0, 0.65) 60%, 
-        rgba(0, 0, 0, 0.30) 80%, 
-        rgba(0, 0, 0, 0.05) 95%, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 45%, 
+        rgba(0, 0, 0, 0.70) 70%, 
+        rgba(0, 0, 0, 0.25) 88%, 
         rgba(0, 0, 0, 0) 100%) !important;
     -webkit-mask-image: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.95) 0%, 
-        rgba(0, 0, 0, 0.90) 35%, 
-        rgba(0, 0, 0, 0.65) 60%, 
-        rgba(0, 0, 0, 0.30) 80%, 
-        rgba(0, 0, 0, 0.05) 95%, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 45%, 
+        rgba(0, 0, 0, 0.70) 70%, 
+        rgba(0, 0, 0, 0.25) 88%, 
         rgba(0, 0, 0, 0) 100%) !important;
 }
 
 /* --------------------------------------------------------------------------
-   5. DETAIL PAGE LAYOUT (FIX: POSTER CLEARANCE & ALIGNMENT ACROSS ALL MEDIA)
+   5. DETAIL PAGE LAYOUT (FIX: POSTER & APPLE GLASS DOCK ARCHITECTURE)
    -------------------------------------------------------------------------- */
-/* Global clearance on detail pages so items NEVER clip into the fixed topbar */
 #itemDetailPage,
 .itemDetailPage {
-    padding-top: 5.5rem !important;
+    padding-top: 5.2rem !important;
     box-sizing: border-box !important;
 }
 
@@ -429,7 +437,7 @@ body, html {
     z-index: 1 !important;
 }
 
-/* Detail Ribbon: Flex row holding the poster and title information */
+/* Ribbon row holding poster on left and Apple Glass Dock on right */
 .detailRibbon {
     display: flex !important;
     flex-direction: row !important;
@@ -440,7 +448,6 @@ body, html {
     position: relative !important;
 }
 
-/* Poster / Episode Thumbnail container: Anchored properly, never cut off */
 .detailImageContainer {
     flex: 0 0 auto !important;
     position: relative !important;
@@ -459,85 +466,117 @@ body, html {
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
 }
 
-/* Episode view specific thumbnail ratio */
 .detailImageContainer .card:not(.overflowPortraitCard) {
     border-radius: var(--apple-radius-card) !important;
     max-width: 420px !important;
 }
 
-/* Right-hand Info Column (Title, Logo, Metadata Chips, Actions) */
+/* --------------------------------------------------------------------------
+   6. APPLE TV GLASS DOCK (TITLE, METADATA SECTION & ACTION BUTTONS SECTION)
+   -------------------------------------------------------------------------- */
+/* Unified Glass Dock container for Title, Metadata Pills and Action Buttons */
 .infoWrapper {
     flex: 1 1 auto !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: flex-start !important;
     align-items: flex-start !important;
-    padding: 0 !important;
-    margin: 0 !important;
     min-width: 0 !important;
+    background: rgba(22, 22, 28, 0.55) !important;
+    backdrop-filter: blur(28px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 12px 36px rgba(0, 0, 0, 0.5) !important;
+    border-radius: var(--apple-radius-modal) !important;
+    padding: 22px 28px !important;
+    margin: 0 !important;
 }
 
 /* --------------------------------------------------------------------------
-   6. TITLE & LOGO SYSTEM (FIX: PREVENT OVERLAPPING LOGO AND TEXT)
+   7. TITLE, LOGO & PARENT LINK SYSTEM (FIX: REACHER LINK & LOGO DISPLAY)
    -------------------------------------------------------------------------- */
 .nameContainer {
     position: relative !important;
     width: 100% !important;
-    margin-bottom: 0.6rem !important;
+    margin-bottom: 0.8rem !important;
 }
 
-/* High-res Apple TV style Logo display */
+/* Apple TV Pill badge for Series navigation ("Reacher" link on Season/Episode pages) */
+.parentName {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 0 10px 0 !important;
+}
+
+.parentName a,
+.parentName .parentNameLink {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.015em !important;
+    color: var(--apple-text-primary) !important;
+    text-decoration: none !important;
+    background: var(--apple-glass-pill) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: var(--apple-specular-border) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    border-radius: var(--apple-radius-pill) !important;
+    padding: 6px 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    transition: all var(--apple-transition-fast) !important;
+    cursor: pointer !important;
+}
+
+.parentName a:hover,
+.parentName .parentNameLink:hover {
+    background: var(--apple-glass-pill-hover) !important;
+    transform: scale(1.05) translateY(-1px) !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    color: #ffffff !important;
+}
+
+/* High-res Apple TV Logo Display */
 .detailLogo {
     display: block !important;
-    height: 100px !important;
-    max-height: 120px !important;
+    height: 90px !important;
+    max-height: 110px !important;
     width: 380px !important;
     max-width: 100% !important;
     background-position: left center !important;
     background-repeat: no-repeat !important;
     background-size: contain !important;
-    margin: 0 0 14px 0 !important;
+    margin: 0 0 12px 0 !important;
     position: relative !important;
 }
 
 .detailLogo.hide,
-.detailLogo[style*="display: none"] {
+.detailLogo[style*="display: none"],
+.detailLogo:empty:not([style*="background-image"]) {
     display: none !important;
 }
 
-/* Clean Apple TV Logic: When a logo image exists, hide the duplicate plain text title */
-#itemDetailPage:has(.detailLogo:not(.hide):not([style*="display: none"])) .itemName,
-.infoWrapper:has(.detailLogo:not(.hide):not([style*="display: none"])) .itemName,
-.nameContainer:has(.detailLogo:not(.hide):not([style*="display: none"])) .itemName,
-.detailLogo:not(.hide):not([style*="display: none"]) ~ .itemName,
-.detailLogo:not(.hide):not([style*="display: none"]) + .itemName,
-.detailLogo:not(.hide):not([style*="display: none"]) ~ * .itemName {
-    display: none !important;
-}
-
-/* Standard Typography when no logo is present */
+/* Bold Apple TV typography for title */
 .itemName {
-    font-size: 2.2rem !important;
+    font-size: 2.3rem !important;
     font-weight: 700 !important;
     letter-spacing: -0.025em !important;
-    line-height: 1.2 !important;
-    margin: 0 0 8px 0 !important;
+    line-height: 1.18 !important;
+    margin: 0 0 10px 0 !important;
     color: var(--apple-text-primary) !important;
-    position: relative !important;
+    display: block !important;
 }
 
-.parentName {
-    font-size: 1.15rem !important;
-    font-weight: 500 !important;
-    color: var(--apple-text-secondary) !important;
-    margin-bottom: 6px !important;
-    line-height: 1.3 !important;
+/* When active logo image URL is present, hide duplicate plain text title */
+.detailLogo[style*="background-image"]:not([style*="url('')"]):not([style*='url("")']) ~ .itemName,
+.detailLogo:has(img) ~ .itemName {
+    display: none !important;
 }
 
 /* --------------------------------------------------------------------------
-   7. METADATA CHIPS & ACTION BUTTONS (FIX: PREVENT VERTICAL SQUISHING)
+   8. SECTION 1: METADATA CHIPS ROW (APPLE SPECULAR GLASS CAPSULES)
    -------------------------------------------------------------------------- */
-/* Metadata chips container: Full row width, wraps gracefully without breaking columns */
 .itemMiscInfo,
 .itemMiscInfo-primary {
     display: flex !important;
@@ -546,12 +585,10 @@ body, html {
     align-items: center !important;
     gap: 8px 10px !important;
     width: 100% !important;
-    max-width: 100% !important;
-    margin: 6px 0 14px 0 !important;
+    margin: 4px 0 16px 0 !important;
     position: relative !important;
 }
 
-/* Individual Glass Pills */
 .itemMiscInfoItem,
 .mediaInfoItem {
     display: inline-flex !important;
@@ -561,13 +598,13 @@ body, html {
     width: auto !important;
     max-width: fit-content !important;
     background: var(--apple-glass-pill) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
     border: var(--apple-specular-border-subtle) !important;
     box-shadow: var(--apple-specular-top-rim) !important;
     border-radius: var(--apple-radius-pill) !important;
-    padding: 4px 12px !important;
-    font-size: 0.85rem !important;
+    padding: 5px 14px !important;
+    font-size: 0.88rem !important;
     font-weight: 500 !important;
     color: var(--apple-text-secondary) !important;
     line-height: 1.4 !important;
@@ -586,7 +623,9 @@ body, html {
     margin-right: 4px !important;
 }
 
-/* Action Buttons Dock (Play, Favorite, Watched, etc.) on their own row */
+/* --------------------------------------------------------------------------
+   9. SECTION 2: ACTION BUTTONS DOCK (SOLID WHITE PLAY & GLASS CAPSULES)
+   -------------------------------------------------------------------------- */
 .mainDetailButtons {
     display: flex !important;
     flex-direction: row !important;
@@ -594,7 +633,7 @@ body, html {
     align-items: center !important;
     gap: 12px !important;
     width: 100% !important;
-    margin: 10px 0 18px 0 !important;
+    margin: 4px 0 0 0 !important;
 }
 
 /* Primary Play Capsule - Solid Apple White */
@@ -627,7 +666,7 @@ body, html {
     font-weight: 600 !important;
 }
 
-/* Secondary Action Glass Capsules */
+/* Secondary Action Glass Buttons */
 .detailButton {
     background: var(--apple-glass-pill) !important;
     backdrop-filter: blur(24px) !important;
@@ -651,7 +690,79 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   8. DETAIL SECTIONS, MEDIA SELECTORS & SYNOPSIS (SPECULAR GLASS SHEET)
+   10. SEASON SELECTOR & DROPDOWN (FIX: INTERACTIVE GLASS DROPDOWN)
+   -------------------------------------------------------------------------- */
+/* Season Header & Select Button */
+.seasonTitle,
+.button-link.sectionTitle {
+    color: var(--apple-text-primary) !important;
+    text-decoration: none !important;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+}
+
+.selectSeason,
+.btnSelectSeason,
+button[is="emby-select"] {
+    background: var(--apple-glass-pill) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border: var(--apple-specular-border) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+    border-radius: var(--apple-radius-pill) !important;
+    color: var(--apple-text-primary) !important;
+    padding: 8px 18px !important;
+    font-size: 0.92rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all var(--apple-transition-fast) !important;
+}
+
+.selectSeason:hover,
+.btnSelectSeason:hover {
+    background: var(--apple-glass-pill-hover) !important;
+    transform: scale(1.04) translateY(-1px) !important;
+}
+
+/* Season Action Sheet / Dropdown Menu - Interactive Apple Glass Sheet */
+.actionSheet {
+    background: var(--apple-glass-heavy) !important;
+    backdrop-filter: var(--apple-blur-hud) !important;
+    -webkit-backdrop-filter: var(--apple-blur-hud) !important;
+    border: var(--apple-specular-border) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 24px 64px rgba(0, 0, 0, 0.85) !important;
+    border-radius: var(--apple-radius-modal) !important;
+    padding: 10px !important;
+    z-index: 1000 !important;
+    pointer-events: auto !important;
+}
+
+.actionSheetMenuItem {
+    border-radius: var(--apple-radius-sm) !important;
+    margin: 4px 6px !important;
+    padding: 12px 18px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    color: var(--apple-text-primary) !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    transition: all var(--apple-transition-fast) !important;
+}
+
+.actionSheetMenuItem:hover {
+    background: var(--apple-glass-pill) !important;
+    transform: translateX(4px) !important;
+}
+
+.actionSheetMenuItem.selected,
+.actionSheetMenuItem.actionSheetMenuItem-selected {
+    background: rgba(255, 255, 255, 0.22) !important;
+    font-weight: 600 !important;
+    box-shadow: var(--apple-specular-top-rim) !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. DETAIL SECTIONS, MEDIA SELECTORS & SYNOPSIS (SPECULAR GLASS SHEET)
    -------------------------------------------------------------------------- */
 .detailPagePrimaryContainer {
     background: transparent !important;
@@ -695,7 +806,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   9. EPISODE LIST & SEASON VIEWS (APPLE TV LIST CARDS)
+   12. EPISODE LIST & SEASON VIEWS (APPLE TV LIST CARDS)
    -------------------------------------------------------------------------- */
 .childrenItemsContainer.itemsContainer.vertical-list .listItem {
     background: rgba(255, 255, 255, 0.04) !important;
@@ -740,7 +851,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   10. CAST & CREW SECTION (CIRCULAR PROFILES)
+   13. CAST & CREW SECTION (CIRCULAR PROFILES)
    -------------------------------------------------------------------------- */
 #castContent .cardScalable,
 .personCard .cardScalable {
@@ -788,7 +899,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   11. ON-SCREEN DISPLAY (OSD) VIDEO PLAYER & CONTROLS
+   14. ON-SCREEN DISPLAY (OSD) VIDEO PLAYER & CONTROLS
    -------------------------------------------------------------------------- */
 .videoOsdBottom {
     background: transparent !important;
@@ -860,7 +971,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   12. INTRO SKIPPER INTEGRATION
+   15. INTRO SKIPPER INTEGRATION
    -------------------------------------------------------------------------- */
 .skip-intro,
 .skip-button,
@@ -888,7 +999,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   13. MODALS, POPUPS, CONTEXT MENUS & DIALOGS
+   16. MODALS, POPUPS, CONTEXT MENUS & DIALOGS
    -------------------------------------------------------------------------- */
 .dialog,
 .actionSheet,
@@ -899,16 +1010,6 @@ body, html {
     border: var(--apple-specular-border) !important;
     box-shadow: var(--apple-specular-top-rim), 0 24px 64px rgba(0, 0, 0, 0.8) !important;
     border-radius: var(--apple-radius-modal) !important;
-}
-
-.actionSheetMenuItem {
-    border-radius: var(--apple-radius-sm) !important;
-    margin: 3px 6px !important;
-    transition: background-color var(--apple-transition-fast) !important;
-}
-
-.actionSheetMenuItem:hover {
-    background: var(--apple-glass-pill) !important;
 }
 
 .emby-input,
@@ -929,7 +1030,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   14. RESPONSIVE COMPACT MEDIA RULES
+   17. RESPONSIVE COMPACT MEDIA RULES
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
     #itemDetailPage,
@@ -946,6 +1047,11 @@ body, html {
 
     .detailImageContainer .card {
         max-height: 42vh !important;
+    }
+
+    .infoWrapper {
+        padding: 16px 20px !important;
+        width: 100% !important;
     }
 
     .videoOsdBottom {
