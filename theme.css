@@ -2,7 +2,7 @@
    AZUSHI APPLE GLASS THEME FOR JELLYFIN
    Architecture: 100% NeutralFin / ElegantFin Engine & Layout
    Aesthetic: Apple tvOS Glassmorphic Dark Design System
-   Repository / Branding Ready: Self-Contained Standalone CSS (KKK)
+   Repository / Branding Ready: Self-Contained Standalone CSS (1)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -10,38 +10,45 @@
    -------------------------------------------------------------------------- */
 :root {
     /* Color Palette - Apple Dark Glass Specular */
-    --apple-bg-base: #000000;
-    --apple-bg-card: rgba(28, 28, 35, 0.45);
-    --apple-glass-heavy: rgba(20, 20, 26, 0.75);
-    --apple-glass-medium: rgba(28, 28, 36, 0.60);
+    --apple-bg-base: #07070a;
+    --apple-bg-card: rgba(30, 30, 36, 0.45);
+    --apple-bg-card-hover: rgba(45, 45, 55, 0.65);
+    --apple-glass-heavy: rgba(18, 18, 24, 0.75);
+    --apple-glass-medium: rgba(26, 26, 34, 0.55);
+    --apple-glass-subtle: rgba(255, 255, 255, 0.06);
     --apple-glass-pill: rgba(255, 255, 255, 0.12);
     --apple-glass-pill-hover: rgba(255, 255, 255, 0.22);
 
-    /* Apple tvOS Specular Highlights & Borders */
-    --apple-specular-border: 1px solid rgba(255, 255, 255, 0.18);
-    --apple-specular-border-subtle: 1px solid rgba(255, 255, 255, 0.10);
-    --apple-specular-top-rim: inset 0 1px 1px 0 rgba(255, 255, 255, 0.32);
+    /* Dynamic Apple tvOS Highlights & Borders */
+    --apple-specular-border: 1px solid rgba(255, 255, 255, 0.16);
+    --apple-specular-border-subtle: 1px solid rgba(255, 255, 255, 0.08);
+    --apple-specular-glow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+    --apple-specular-top-rim: inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
 
     /* Text & Contrasts */
     --apple-text-primary: #f5f5f7;
-    --apple-text-secondary: rgba(235, 235, 245, 0.72);
-    --apple-text-tertiary: rgba(235, 235, 245, 0.42);
+    --apple-text-secondary: rgba(235, 235, 245, 0.65);
+    --apple-text-tertiary: rgba(235, 235, 245, 0.38);
+    --apple-accent: #ffffff;
+    --apple-accent-contrast: #000000;
 
-    /* Curvatures (tvOS Standards) */
+    /* Curvatures (Apple tvOS Standards) */
     --apple-radius-sm: 8px;
-    --apple-radius-card: 16px;
+    --apple-radius-card: 14px;
     --apple-radius-pill: 9999px;
-    --apple-radius-modal: 22px;
+    --apple-radius-modal: 20px;
     --apple-radius-player: 28px;
 
     /* Physics & Animation Curves */
     --apple-ease: cubic-bezier(0.16, 1, 0.3, 1);
     --apple-transition-fast: 0.18s var(--apple-ease);
     --apple-transition-norm: 0.32s var(--apple-ease);
+    --apple-transition-slow: 0.48s var(--apple-ease);
 
-    /* Glass Materials */
-    --apple-blur-base: blur(30px) saturate(190%);
+    /* Glass Backdrops */
+    --apple-blur-base: blur(28px) saturate(180%);
     --apple-blur-hud: blur(36px) saturate(200%);
+    --apple-blur-overlay: blur(20px) saturate(160%);
 }
 
 /* --------------------------------------------------------------------------
@@ -55,7 +62,6 @@ body, html {
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
     text-rendering: optimizeLegibility !important;
-    overflow-x: hidden !important;
 }
 
 ::selection {
@@ -63,74 +69,63 @@ body, html {
     color: #ffffff !important;
 }
 
-/* Scrollbars */
+/* Scrollbars - Sleek Apple Glass Inset */
 ::-webkit-scrollbar {
-    width: 6px !important;
-    height: 6px !important;
+    width: 8px !important;
+    height: 8px !important;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent !important;
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.22) !important;
     border-radius: var(--apple-radius-pill) !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.40) !important;
+    background: rgba(255, 255, 255, 0.38) !important;
 }
 
 /* --------------------------------------------------------------------------
-   2. GLOBAL HEADER (SCREENSHOT 3 & 4: COMPACT, FULLY TRANSPARENT, NO BLACK BORDER)
+   2. HEADER & NAVIGATION (TRANSPARENT TOPBAR & FLOATING GLASS TABS)
    -------------------------------------------------------------------------- */
-/* Eliminate the massive black band: make the header ultra-compact and 100% transparent */
+/* Fully transparent header so hero artwork flows behind it seamlessly */
 .skinHeader,
 .mainHeader {
     background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
+    background-image: linear-gradient(180deg, rgba(7, 7, 10, 0.75) 0%, rgba(7, 7, 10, 0) 100%) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border: none !important;
     border-bottom: none !important;
     box-shadow: none !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    height: 54px !important;
-    min-height: 54px !important;
-    max-height: 54px !important;
-    padding: 0 1.2rem !important;
-    z-index: 1000 !important;
+    z-index: 100 !important;
+    transition: background var(--apple-transition-norm) !important;
 }
 
-/* Subtle gentle top-down vignette only so icons remain readable over white artwork */
-.skinHeader::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: 90px !important;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%) !important;
-    pointer-events: none !important;
-    z-index: -1 !important;
-}
-
-/* Breadcrumbs (e.g. Movies / In the Grey) - Clean glass typography */
-.headerHomeButton,
-.headerButton,
-.sectionTitle,
-.headerSelectedTab {
+/* Breadcrumbs / Page Title Placement in Top Bar */
+.headerHomeButton {
     color: var(--apple-text-primary) !important;
 }
 
+.headerSelectedTab,
+.headerButton {
+    color: var(--apple-text-primary) !important;
+}
+
+/* Header buttons & Action Icons */
 .headerButton {
     background: transparent !important;
     border-radius: var(--apple-radius-pill) !important;
-    transition: transform var(--apple-transition-fast), background var(--apple-transition-fast) !important;
-    width: 38px !important;
-    height: 38px !important;
+    transition: transform var(--apple-transition-fast), background-color var(--apple-transition-fast) !important;
+    color: var(--apple-text-primary) !important;
 }
 
 .headerButton:hover {
@@ -138,47 +133,43 @@ body, html {
     transform: scale(1.08) !important;
 }
 
-/* --------------------------------------------------------------------------
-   3. APPLE TV FLOATING TAB BAR (SCREENSHOT 4 & SCREENSHOT 6 INSPIRATION)
-   -------------------------------------------------------------------------- */
-/* NeutralFin-styled compact centered glass capsule */
+.headerButton:active {
+    transform: scale(0.95) !important;
+}
+
+/* Apple tvOS Floating Pill Tab Navigation Bar (Home, Favorites, Request, Watchlist) */
 .headerTabsSection {
     background: transparent !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: auto !important;
-    position: fixed !important;
-    top: 10px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 1100 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 100% !important;
+    margin-top: 6px !important;
 }
 
 .headerTabs,
 .emby-tabs-slider {
     display: inline-flex !important;
+    justify-content: center !important;
     align-items: center !important;
-    background: rgba(30, 30, 38, 0.65) !important;
+    background: rgba(24, 24, 30, 0.65) !important;
     backdrop-filter: blur(24px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-    border: var(--apple-specular-border) !important;
+    border: var(--apple-specular-border-subtle) !important;
     box-shadow: var(--apple-specular-top-rim), 0 8px 24px rgba(0, 0, 0, 0.45) !important;
     border-radius: var(--apple-radius-pill) !important;
-    padding: 3px 5px !important;
-    gap: 4px !important;
+    padding: 4px 6px !important;
     width: auto !important;
+    max-width: fit-content !important;
+    margin: 0 auto !important;
 }
 
-/* Individual tab items (Home, Favorites, Request, Watchlist) */
 .emby-tab-button {
     background: transparent !important;
     border-radius: var(--apple-radius-pill) !important;
-    padding: 5px 16px !important;
-    margin: 0 !important;
-    font-size: 0.88rem !important;
+    padding: 6px 18px !important;
+    margin: 0 3px !important;
+    font-size: 0.92rem !important;
     font-weight: 500 !important;
     color: var(--apple-text-secondary) !important;
     border: none !important;
@@ -188,17 +179,17 @@ body, html {
 }
 
 .emby-tab-button:hover {
-    background: rgba(255, 255, 255, 0.16) !important;
+    background: var(--apple-glass-pill) !important;
     color: #ffffff !important;
-    transform: scale(1.03) !important;
+    transform: scale(1.04) !important;
 }
 
-/* Active tab: authentic Apple tvOS white capsule with pure black text */
+/* Active Tab in Pill Dock */
 .emby-tab-button-active {
-    background: #ffffff !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     color: #000000 !important;
     font-weight: 600 !important;
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 2px 12px rgba(255, 255, 255, 0.35) !important;
 }
 
 .emby-tab-button-active .emby-button-foreground {
@@ -210,289 +201,91 @@ body, html {
     color: #000000 !important;
 }
 
-/* --------------------------------------------------------------------------
-   4. DETAIL PAGE & BACKDROP POSITIONING (SCREENSHOT 1, 2, 3: FIX BLACK VOID & MASK)
-   -------------------------------------------------------------------------- */
-/* Fix backdrop start: stretch fully to top: 0 with NO black void */
-.backdropContainer,
-.detailPageBackdrop,
-.itemBackdrop {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    background-size: cover !important;
-    background-position: center top !important;
-    filter: brightness(0.68) saturate(120%) !important;
-    z-index: -2 !important;
-    pointer-events: none !important;
-    /* Smooth vertical mask that fades cleanly right at the lower text area */
-    mask-image: linear-gradient(180deg, 
-        rgba(0,0,0,1) 0%, 
-        rgba(0,0,0,1) 35%, 
-        rgba(0,0,0,0.85) 55%, 
-        rgba(0,0,0,0.25) 75%, 
-        rgba(0,0,0,0) 95%) !important;
-    -webkit-mask-image: linear-gradient(180deg, 
-        rgba(0,0,0,1) 0%, 
-        rgba(0,0,0,1) 35%, 
-        rgba(0,0,0,0.85) 55%, 
-        rgba(0,0,0,0.25) 75%, 
-        rgba(0,0,0,0) 95%) !important;
+/* Navigation Drawer / Sidebar */
+.mainDrawer,
+.mainDrawer-scrollContainer {
+    background: var(--apple-glass-heavy) !important;
+    backdrop-filter: var(--apple-blur-base) !important;
+    -webkit-backdrop-filter: var(--apple-blur-base) !important;
+    border-right: var(--apple-specular-border-subtle) !important;
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.6) !important;
 }
 
-/* Ensure background underlying surface matches true pitch black */
-.detailPageWrapperContainer,
-.detailPagePrimaryContainer {
-    background: transparent !important;
-}
-
-/* Clear poster backdrop duplicate container if any */
-.detailPageSecondaryContainer {
-    background: transparent !important;
-    position: relative !important;
-    z-index: 2 !important;
-}
-
-/* --------------------------------------------------------------------------
-   5. DETAIL PAGE HERO LOGO & TITLE (SCREENSHOT 3: CLEAN APPLE TV LOGO)
-   -------------------------------------------------------------------------- */
-/* Large, crisp Apple TV title logo treatment */
-.detailLogo {
-    max-width: 420px !important;
-    max-height: 160px !important;
-    min-height: 70px !important;
-    margin: 1.5rem 0 1rem 0 !important;
-    object-fit: contain !important;
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.75)) !important;
-    transform: translateZ(0);
-}
-
-/* Detail Title typography when no image logo exists */
-.itemName {
-    font-size: 2.8rem !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.025em !important;
-    color: #ffffff !important;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8) !important;
-    margin-bottom: 0.5rem !important;
-}
-
-.itemTagline {
-    font-size: 1.15rem !important;
-    font-weight: 500 !important;
-    color: var(--apple-text-secondary) !important;
-    margin: 0.8rem 0 !important;
-}
-
-/* --------------------------------------------------------------------------
-   6. DETAIL CONTROLS & METADATA SECTION
-   -------------------------------------------------------------------------- */
-.mainDetailButtons {
-    display: flex !important;
-    align-items: center !important;
-    gap: 14px !important;
-    margin: 1.4rem 0 !important;
-}
-
-/* Apple Solid White Play Capsule */
-.btnPlay {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border-radius: var(--apple-radius-pill) !important;
-    padding: 0.75rem 2.2rem !important;
-    box-shadow: 0 4px 18px rgba(255, 255, 255, 0.35) !important;
-    border: none !important;
-    transition: transform var(--apple-transition-fast), box-shadow var(--apple-transition-fast) !important;
-}
-
-.btnPlay:hover {
-    background: #ffffff !important;
-    transform: scale(1.05) translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(255, 255, 255, 0.55) !important;
-}
-
-.btnPlay .material-icons,
-.btnPlay .button-text {
-    color: #000000 !important;
-    font-weight: 600 !important;
-}
-
-/* Frosted secondary action buttons */
-.detailButton {
-    background: var(--apple-glass-pill) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border: var(--apple-specular-border) !important;
-    box-shadow: var(--apple-specular-top-rim) !important;
-    border-radius: var(--apple-radius-pill) !important;
-    color: var(--apple-text-primary) !important;
+.navMenuOption {
+    border-radius: var(--apple-radius-sm) !important;
+    margin: 4px 12px !important;
+    padding: 10px 14px !important;
     transition: all var(--apple-transition-fast) !important;
 }
 
-.detailButton:hover {
-    background: var(--apple-glass-pill-hover) !important;
-    transform: scale(1.06) translateY(-2px) !important;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+.navMenuOption:hover {
+    background: var(--apple-glass-pill) !important;
+    transform: translateX(4px) !important;
 }
 
-/* Detail info cards (Video/Audio/Subtitles dropdown containers) */
-.detailSection {
-    background: rgba(20, 20, 26, 0.55) !important;
-    backdrop-filter: var(--apple-blur-base) !important;
-    -webkit-backdrop-filter: var(--apple-blur-base) !important;
+.navMenuOption-selected {
+    background: rgba(255, 255, 255, 0.18) !important;
+    box-shadow: var(--apple-specular-top-rim) !important;
     border: var(--apple-specular-border-subtle) !important;
-    border-radius: var(--apple-radius-modal) !important;
-    box-shadow: var(--apple-specular-top-rim), 0 12px 36px rgba(0, 0, 0, 0.45) !important;
-    padding: 22px !important;
-    margin-bottom: 24px !important;
 }
 
 /* --------------------------------------------------------------------------
-   7. CAST & CREW HOVER: ZERO BLUR + SPECULAR GLASS POPUP (SCREENSHOT 2)
-   -------------------------------------------------------------------------- */
-/* NeutralFin circular cast layout */
-#castContent .cardScalable,
-.personCard .cardScalable {
-    border-radius: 50% !important;
-    aspect-ratio: 1 / 1 !important;
-    border: 2px solid rgba(255, 255, 255, 0.16) !important;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
-    overflow: hidden !important;
-    background: transparent !important;
-    transition: transform 0.35s var(--apple-ease), box-shadow 0.35s var(--apple-ease), border-color 0.35s var(--apple-ease) !important;
-}
-
-/* KILL ALL BLUR on cast portraits permanently - faces stay 100% crystal clear */
-#castContent .cardOverlayContainer,
-.personCard .cardOverlayContainer,
-#castContent .cardOverlayFab-primary,
-.personCard .cardOverlayFab-primary {
-    display: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    filter: none !important;
-    opacity: 0 !important;
-}
-
-#castContent .cardImage,
-.personCard .cardImage {
-    filter: none !important;
-    -webkit-filter: none !important;
-    transition: transform 0.4s var(--apple-ease) !important;
-}
-
-/* Hover: Apple tvOS Specular Floating Zoom with halo reflection */
-#castContent .card:hover .cardScalable,
-.personCard:hover .cardScalable {
-    transform: scale(1.14) translateY(-6px) !important;
-    border-color: rgba(255, 255, 255, 0.9) !important;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 18px 36px rgba(0, 0, 0, 0.85) !important;
-    z-index: 10 !important;
-}
-
-#castContent .card:hover .cardImage,
-.personCard:hover .cardImage {
-    transform: scale(1.06) !important;
-}
-
-#castContent .cardText,
-.personCard .cardText {
-    text-align: center !important;
-    transition: color var(--apple-transition-fast) !important;
-}
-
-#castContent .card:hover .cardText-first,
-.personCard:hover .cardText-first {
-    color: #ffffff !important;
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.4) !important;
-}
-
-/* --------------------------------------------------------------------------
-   8. POSTER CARDS & HOVER EFFECT (SCREENSHOT 5: NO BLUE/BLUR BLOB, CLEAN GLASS)
+   3. CARDS, POSTERS & APPLE HOVER PHYSICS (NO MILKY / BLUE BLUR BLOB)
    -------------------------------------------------------------------------- */
 .cardBox {
     background: transparent !important;
     overflow: visible !important;
+    transition: transform var(--apple-transition-norm), box-shadow var(--apple-transition-norm) !important;
+    will-change: transform, box-shadow;
 }
 
 .cardScalable {
     border-radius: var(--apple-radius-card) !important;
     overflow: hidden !important;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
     border: var(--apple-specular-border-subtle) !important;
+    transition: all var(--apple-transition-norm) !important;
     background: var(--apple-bg-card) !important;
-    transition: transform 0.32s var(--apple-ease), box-shadow 0.32s var(--apple-ease), border-color 0.32s var(--apple-ease) !important;
+}
+
+/* Card image keeps full clarity on hover without heavy blur */
+.cardImageContainer {
+    border-radius: var(--apple-radius-card) !important;
+}
+
+.cardImage {
+    transition: transform var(--apple-transition-norm), filter var(--apple-transition-norm) !important;
 }
 
 /* Apple tvOS 3D Parallax Hover Lift */
 .card:hover .cardScalable {
     transform: translateY(-8px) scale(1.04) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
-    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85), var(--apple-specular-top-rim) !important;
-    z-index: 5 !important;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.28), var(--apple-specular-top-rim) !important;
 }
 
-/* REMOVE the heavy blue/cloudy blur blob completely */
-.card:not(#castContent .card):not(.personCard) .cardOverlayContainer {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.65) 100%) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    filter: none !important;
-    opacity: 0 !important;
-    transition: opacity 0.25s var(--apple-ease) !important;
+.card:active .cardScalable {
+    transform: translateY(-2px) scale(1.00) !important;
+    transition-duration: 0.08s !important;
 }
 
-.card:not(#castContent .card):not(.personCard):hover .cardOverlayContainer {
-    opacity: 1 !important;
+/* Card Titles and Footers */
+.cardText {
+    color: var(--apple-text-secondary) !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
 }
 
-/* Keep card poster image crisp with zero distortion */
-.cardImage {
-    filter: none !important;
-    -webkit-filter: none !important;
+.cardText-first {
+    color: var(--apple-text-primary) !important;
+    font-weight: 600 !important;
+    font-size: 0.98rem !important;
+    letter-spacing: -0.01em !important;
 }
 
-/* Apple solid white play button on card hover */
-.cardOverlayFab-primary {
-    background: rgba(255, 255, 255, 0.95) !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 14px rgba(255, 255, 255, 0.4) !important;
-    border-radius: 50% !important;
-    border: none !important;
-    transition: transform var(--apple-transition-fast), background var(--apple-transition-fast) !important;
-}
-
-.cardOverlayFab-primary:hover {
-    background: #ffffff !important;
-    transform: scale(1.15) !important;
-    box-shadow: 0 10px 28px rgba(255, 255, 255, 0.65) !important;
-}
-
-.cardOverlayFab-primary .material-icons,
-.cardOverlayFab-primary .md-icon {
-    color: #000000 !important;
-}
-
-.cardOverlayButton {
-    background: rgba(255, 255, 255, 0.18) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
-    border: var(--apple-specular-border-subtle) !important;
-    color: #ffffff !important;
-    border-radius: 50% !important;
-    transition: transform var(--apple-transition-fast) !important;
-}
-
-.cardOverlayButton:hover {
-    background: rgba(255, 255, 255, 0.35) !important;
-    transform: scale(1.12) !important;
-}
-
-/* Unwatched & Played Badges */
+/* Unwatched / Watched Count Badges */
 .countIndicator,
 .playedIndicator {
-    background: rgba(20, 20, 26, 0.78) !important;
+    background: var(--apple-glass-heavy) !important;
     backdrop-filter: blur(14px) !important;
     -webkit-backdrop-filter: blur(14px) !important;
     border: var(--apple-specular-border-subtle) !important;
@@ -503,8 +296,212 @@ body, html {
     padding: 2px 8px !important;
 }
 
+/* Progress bar inside card */
+.itemProgressBar {
+    background: rgba(255, 255, 255, 0.2) !important;
+    height: 4px !important;
+    border-radius: var(--apple-radius-pill) !important;
+    overflow: hidden !important;
+}
+
+.itemProgressBarForeground {
+    background: #ffffff !important;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8) !important;
+    border-radius: var(--apple-radius-pill) !important;
+}
+
 /* --------------------------------------------------------------------------
-   9. METADATA CHIPS & BADGES
+   4. CARD OVERLAYS: SPECULAR GLASS GRADIENT (REPLACING BLUE/BLUR OVERLAYS)
+   -------------------------------------------------------------------------- */
+/* Subtle dark vignette overlay that maintains poster clarity instead of full blur */
+.cardOverlayContainer {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.6) 100%) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: var(--apple-radius-card) !important;
+    transition: opacity var(--apple-transition-fast) !important;
+}
+
+/* Solid White Apple Play Button */
+.cardOverlayFab-primary {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.4) !important;
+    border-radius: 50% !important;
+    transition: transform var(--apple-transition-fast), background-color var(--apple-transition-fast) !important;
+}
+
+.cardOverlayFab-primary:hover {
+    background: #ffffff !important;
+    transform: scale(1.15) !important;
+    box-shadow: 0 10px 28px rgba(255, 255, 255, 0.6) !important;
+}
+
+.cardOverlayFab-primary:active {
+    transform: scale(0.92) !important;
+}
+
+.cardOverlayFab-primary .material-icons,
+.cardOverlayFab-primary .md-icon {
+    color: #000000 !important;
+}
+
+.cardOverlayButton {
+    background: rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    color: #ffffff !important;
+    border-radius: 50% !important;
+    transition: transform var(--apple-transition-fast), background-color var(--apple-transition-fast) !important;
+}
+
+.cardOverlayButton:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    transform: scale(1.12) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. DETAIL PAGE & BACKDROP FADE (CLEAN TEXT MASKING & LOGO PLACEMENT)
+   -------------------------------------------------------------------------- */
+.detailPageWrapperContainer {
+    background: transparent !important;
+}
+
+/* Backdrop Image - Positioned from the top and smoothly fading out into black right around text area */
+.backdropContainer,
+.detailPageBackdrop,
+.itemBackdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 85vh !important;
+    background-size: cover !important;
+    background-position: top center !important;
+    filter: brightness(0.65) saturate(125%) !important;
+    mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 40%, 
+        rgba(0, 0, 0, 0.5) 65%, 
+        rgba(0, 0, 0, 0.15) 82%, 
+        rgba(0, 0, 0, 0) 100%) !important;
+    -webkit-mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 40%, 
+        rgba(0, 0, 0, 0.5) 65%, 
+        rgba(0, 0, 0, 0.15) 82%, 
+        rgba(0, 0, 0, 0) 100%) !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+}
+
+/* Prevent abrupt cutoffs below the backdrop */
+.detailPagePrimaryContainer {
+    background: transparent !important;
+    padding-top: 5vh !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Detail Primary Play Button - Solid White Apple Capsule */
+.btnPlay {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+    border-radius: var(--apple-radius-pill) !important;
+    padding: 0.75rem 2.2rem !important;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    border: none !important;
+    transition: transform var(--apple-transition-fast), box-shadow var(--apple-transition-fast) !important;
+}
+
+.btnPlay:hover {
+    background: #ffffff !important;
+    transform: scale(1.05) translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(255, 255, 255, 0.5) !important;
+}
+
+.btnPlay:active {
+    transform: scale(0.97) !important;
+}
+
+.btnPlay .material-icons,
+.btnPlay .md-icon,
+.btnPlay .button-text {
+    color: #000000 !important;
+    font-weight: 600 !important;
+}
+
+/* Secondary Detail Buttons - Apple Frosted Glass Capsule */
+.detailButton {
+    background: var(--apple-glass-pill) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: var(--apple-specular-border) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+    border-radius: var(--apple-radius-pill) !important;
+    color: var(--apple-text-primary) !important;
+    transition: all var(--apple-transition-fast) !important;
+    padding: 0.65rem 1.4rem !important;
+}
+
+.detailButton:hover {
+    background: var(--apple-glass-pill-hover) !important;
+    transform: scale(1.06) translateY(-2px) !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+.detailButton:active {
+    transform: scale(0.96) !important;
+}
+
+/* Metadata & Overview Sections (Translucent Apple Sheet) */
+.mainDetailButtons {
+    gap: 12px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+}
+
+.detailSection {
+    background: rgba(22, 22, 28, 0.65) !important;
+    backdrop-filter: var(--apple-blur-base) !important;
+    -webkit-backdrop-filter: var(--apple-blur-base) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    border-radius: var(--apple-radius-modal) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    padding: 24px !important;
+    margin-bottom: 24px !important;
+}
+
+/* Dropdown Selections (Audio, Subtitles, Seasons) */
+.selectContainer {
+    background: transparent !important;
+}
+
+.emby-select {
+    background: var(--apple-glass-pill) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border: var(--apple-specular-border) !important;
+    box-shadow: var(--apple-specular-top-rim) !important;
+    border-radius: var(--apple-radius-sm) !important;
+    color: var(--apple-text-primary) !important;
+    padding: 10px 16px !important;
+    transition: all var(--apple-transition-fast) !important;
+}
+
+.emby-select:hover,
+.emby-select:focus {
+    background: var(--apple-glass-pill-hover) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. METADATA CHIPS, BADGES & CRITIC SCORES
    -------------------------------------------------------------------------- */
 .itemMiscInfo,
 .mediaInfoOfficialRating,
@@ -527,14 +524,74 @@ body, html {
     font-size: 0.85rem !important;
     font-weight: 500 !important;
     color: var(--apple-text-secondary) !important;
+    line-height: 1.4 !important;
 }
 
 .starRatingContainer {
-    color: #ffd60a !important; /* Apple Gold */
+    color: #ffd60a !important; /* Apple Vivid Gold */
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.rtIcon,
+.imdbIcon {
+    height: 16px !important;
+    vertical-align: middle !important;
+    margin-right: 4px !important;
 }
 
 /* --------------------------------------------------------------------------
-   10. VIDEO PLAYER (OSD HUD FLOATING GLASS ISLAND)
+   7. CAST & CREW SECTION (CIRCULAR PROFILES: ZOOM & GLOW WITHOUT BLUR)
+   -------------------------------------------------------------------------- */
+#castContent .cardScalable,
+.personCard .cardScalable {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1 !important;
+    border: var(--apple-specular-border) !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
+    transition: transform var(--apple-transition-norm), box-shadow var(--apple-transition-norm) !important;
+    overflow: hidden !important;
+    background: transparent !important;
+}
+
+/* Disable the overlay completely on cast circles so faces are never blurred */
+#castContent .cardOverlayContainer,
+.personCard .cardOverlayContainer {
+    display: none !important;
+}
+
+/* Hover: Scale up smoothly with specular white halo ring */
+#castContent .card:hover .cardScalable,
+.personCard:hover .cardScalable {
+    transform: scale(1.12) translateY(-4px) !important;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85), 0 16px 36px rgba(0, 0, 0, 0.75) !important;
+}
+
+#castContent .cardImage,
+.personCard .cardImage {
+    filter: none !important;
+    backdrop-filter: none !important;
+    transition: transform var(--apple-transition-norm) !important;
+}
+
+#castContent .cardImageContainer,
+.personCard .cardImageContainer {
+    border-radius: 50% !important;
+}
+
+#castContent .cardText,
+.personCard .cardText {
+    text-align: center !important;
+}
+
+#castContent .cardText-first,
+.personCard .cardText-first {
+    font-weight: 600 !important;
+    margin-top: 8px !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. ON-SCREEN DISPLAY (OSD) VIDEO PLAYER & CONTROLS
    -------------------------------------------------------------------------- */
 .videoOsdBottom {
     background: transparent !important;
@@ -553,6 +610,21 @@ body, html {
     margin: 0 auto !important;
 }
 
+.videoOsdHeader {
+    background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%) !important;
+    padding: 1.5rem 2rem !important;
+}
+
+.sliderBubble {
+    background: var(--apple-glass-heavy) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    border-radius: var(--apple-radius-sm) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.5) !important;
+    color: #ffffff !important;
+}
+
 .mdl-slider-background-lower {
     background-color: #ffffff !important;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.7) !important;
@@ -568,15 +640,35 @@ body, html {
     height: 16px !important;
     border-radius: 50% !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+    transition: transform var(--apple-transition-fast) !important;
+}
+
+.mdl-slider:hover::-webkit-slider-thumb {
+    transform: scale(1.3) !important;
+}
+
+.osdControls .paper-icon-button-light {
+    color: var(--apple-text-primary) !important;
+    border-radius: var(--apple-radius-pill) !important;
+    transition: all var(--apple-transition-fast) !important;
+}
+
+.osdControls .paper-icon-button-light:hover {
+    background: var(--apple-glass-pill) !important;
+    transform: scale(1.12) !important;
+}
+
+.osdControls .paper-icon-button-light:active {
+    transform: scale(0.92) !important;
 }
 
 /* --------------------------------------------------------------------------
-   11. INTRO SKIPPER INTEGRATION
+   9. INTRO SKIPPER INTEGRATION
    -------------------------------------------------------------------------- */
 .skip-intro,
 .skip-button,
 .btnSkipIntro {
-    background: rgba(30, 30, 42, 0.70) !important;
+    background: rgba(30, 30, 40, 0.68) !important;
     backdrop-filter: blur(24px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
     border: var(--apple-specular-border) !important;
@@ -584,6 +676,8 @@ body, html {
     box-shadow: var(--apple-specular-top-rim), 0 8px 32px rgba(0, 0, 0, 0.6) !important;
     color: #ffffff !important;
     font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: -0.01em !important;
     padding: 0.7rem 1.6rem !important;
     transition: all var(--apple-transition-fast) !important;
 }
@@ -591,20 +685,74 @@ body, html {
 .skip-intro:hover,
 .skip-button:hover,
 .btnSkipIntro:hover {
-    background: rgba(255, 255, 255, 0.25) !important;
+    background: rgba(255, 255, 255, 0.22) !important;
     transform: scale(1.06) translateY(-2px) !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 12px 32px rgba(0, 0, 0, 0.7) !important;
 }
 
 /* --------------------------------------------------------------------------
-   12. MODALS, POPUPS & SIDEBAR DRAWER
+   10. MODALS, POPUPS, CONTEXT MENUS & DIALOGS
    -------------------------------------------------------------------------- */
 .dialog,
 .actionSheet,
-.mainDrawer,
-.mainDrawer-scrollContainer {
+.mainDrawer {
     background: var(--apple-glass-heavy) !important;
     backdrop-filter: var(--apple-blur-hud) !important;
     -webkit-backdrop-filter: var(--apple-blur-hud) !important;
     border: var(--apple-specular-border) !important;
     box-shadow: var(--apple-specular-top-rim), 0 24px 64px rgba(0, 0, 0, 0.8) !important;
+    border-radius: var(--apple-radius-modal) !important;
+}
+
+.actionSheetMenuItem {
+    border-radius: var(--apple-radius-sm) !important;
+    margin: 3px 6px !important;
+    transition: background-color var(--apple-transition-fast) !important;
+}
+
+.actionSheetMenuItem:hover {
+    background: var(--apple-glass-pill) !important;
+}
+
+.emby-input,
+.emby-textarea {
+    background: var(--apple-glass-pill) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    border-radius: var(--apple-radius-sm) !important;
+    color: var(--apple-text-primary) !important;
+    padding: 10px 14px !important;
+    transition: all var(--apple-transition-fast) !important;
+}
+
+.emby-input:focus,
+.emby-textarea:focus {
+    background: var(--apple-glass-pill-hover) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12) !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. HARDWARE ACCELERATION & RESPONSIVE COMPACT MEDIA RULES
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .videoOsdBottom {
+        padding: 0 0.8rem 0.8rem 0.8rem !important;
+    }
+
+    .videoOsdBottomContent {
+        border-radius: var(--apple-radius-card) !important;
+        padding: 0.8rem 1rem !important;
+    }
+
+    .detailSection {
+        padding: 16px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
