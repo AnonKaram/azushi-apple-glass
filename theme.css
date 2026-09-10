@@ -1,8 +1,7 @@
 /* ==========================================================================
    AZUSHI APPLE GLASS THEME FOR JELLYFIN
-   Architecture: 100% NeutralFin / ElegantFin Engine & Layout
-   Aesthetic: Apple tvOS Glassmorphic Dark Design System
-   Fixed: Detail View Layout Offset, Topbar Clearance & Fullscreen Backdrop (2)
+   Architecture: Apple tvOS Glassmorphic Dark Design System
+   Fixed: Detail Page Layout, Poster Clearance, Fullscreen Backdrop & Typography (4)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -105,12 +104,11 @@ body, html {
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    height: 4.5rem !important;
+    height: 4.2rem !important;
     z-index: 100 !important;
     transition: background var(--apple-transition-norm) !important;
 }
 
-/* Breadcrumbs / Page Title Placement in Top Bar */
 .headerHomeButton {
     color: var(--apple-text-primary) !important;
 }
@@ -120,7 +118,6 @@ body, html {
     color: var(--apple-text-primary) !important;
 }
 
-/* Header buttons & Action Icons */
 .headerButton {
     background: transparent !important;
     border-radius: var(--apple-radius-pill) !important;
@@ -137,7 +134,7 @@ body, html {
     transform: scale(0.95) !important;
 }
 
-/* Apple tvOS Floating Pill Tab Navigation Bar (Home, Favorites, Request, Watchlist) */
+/* Apple tvOS Floating Pill Tab Navigation Bar */
 .headerTabsSection {
     background: transparent !important;
     display: flex !important;
@@ -184,7 +181,6 @@ body, html {
     transform: scale(1.04) !important;
 }
 
-/* Active Tab in Pill Dock */
 .emby-tab-button-active {
     background: rgba(255, 255, 255, 0.95) !important;
     color: #000000 !important;
@@ -201,7 +197,7 @@ body, html {
     color: #000000 !important;
 }
 
-/* Navigation Drawer / Sidebar */
+/* Sidebar Drawer */
 .mainDrawer,
 .mainDrawer-scrollContainer {
     background: var(--apple-glass-heavy) !important;
@@ -305,9 +301,7 @@ body, html {
     border-radius: var(--apple-radius-pill) !important;
 }
 
-/* --------------------------------------------------------------------------
-   4. CARD OVERLAYS: SPECULAR GLASS GRADIENT
-   -------------------------------------------------------------------------- */
+/* Card Play Overlays */
 .cardOverlayContainer {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.6) 100%) !important;
     backdrop-filter: none !important;
@@ -356,96 +350,261 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   5. DETAIL PAGE & BACKDROP FIXES (PROPER HEADER CLEARANCE & FULL VIEWPORT HERO)
+   4. FULLSCREEN APPLE TV BACKDROP ENGINE (FIX: NO HARSH MID-PAGE CUTOFF)
    -------------------------------------------------------------------------- */
-/* Fix 2: Backdrop is anchored cleanly starting from the very top (0,0) and fills viewport */
+/* Strip any default dark backgrounds that block the backdrop at top */
+#itemDetailPage,
+.itemDetailPage,
+.detailPageWrapperContainer,
+.detailRibbon,
+.detailRibbon.padded-left,
+.detailRibbon.padded-right,
+.infoWrapper,
+.detailPagePrimaryContainer,
+.detailPageSecondaryContainer {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Backdrop Canvas: Anchored from top 0, filling the entire viewport */
 .backgroundContainer,
 .backdropContainer {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
     z-index: -2 !important;
+    background-color: var(--apple-bg-base) !important;
     overflow: hidden !important;
     pointer-events: none !important;
 }
 
+/* The actual backdrop image: smooth specular fade from top to bottom */
 .backdropImage,
+.backgroundContainer.withBackdrop,
 .detailPageBackdrop,
 .itemBackdrop {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    height: 90vh !important;
+    height: 100vh !important;
     background-size: cover !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
-    filter: brightness(0.68) saturate(125%) !important;
-    -webkit-mask-image: linear-gradient(180deg, 
-        rgba(0, 0, 0, 1) 0%, 
-        rgba(0, 0, 0, 1) 45%, 
-        rgba(0, 0, 0, 0.6) 70%, 
-        rgba(0, 0, 0, 0.15) 88%, 
-        rgba(0, 0, 0, 0) 100%) !important;
-    mask-image: linear-gradient(180deg, 
-        rgba(0, 0, 0, 1) 0%, 
-        rgba(0, 0, 0, 1) 45%, 
-        rgba(0, 0, 0, 0.6) 70%, 
-        rgba(0, 0, 0, 0.15) 88%, 
-        rgba(0, 0, 0, 0) 100%) !important;
+    filter: brightness(0.65) saturate(120%) !important;
     z-index: -1 !important;
     pointer-events: none !important;
+    mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.95) 0%, 
+        rgba(0, 0, 0, 0.90) 35%, 
+        rgba(0, 0, 0, 0.65) 60%, 
+        rgba(0, 0, 0, 0.30) 80%, 
+        rgba(0, 0, 0, 0.05) 95%, 
+        rgba(0, 0, 0, 0) 100%) !important;
+    -webkit-mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.95) 0%, 
+        rgba(0, 0, 0, 0.90) 35%, 
+        rgba(0, 0, 0, 0.65) 60%, 
+        rgba(0, 0, 0, 0.30) 80%, 
+        rgba(0, 0, 0, 0.05) 95%, 
+        rgba(0, 0, 0, 0) 100%) !important;
 }
 
-/* Detail Page Layout & Containers */
-.detailPageWrapperContainer {
-    background: transparent !important;
-    position: relative !important;
-}
-
-/* Fix 1: Adequate top clearance so title, runtime, progress & poster are fully visible */
-.detailPagePrimaryContainer {
-    background: transparent !important;
+/* --------------------------------------------------------------------------
+   5. DETAIL PAGE LAYOUT (FIX: POSTER CLEARANCE & ALIGNMENT ACROSS ALL MEDIA)
+   -------------------------------------------------------------------------- */
+/* Global clearance on detail pages so items NEVER clip into the fixed topbar */
+#itemDetailPage,
+.itemDetailPage {
     padding-top: 5.5rem !important;
+    box-sizing: border-box !important;
+}
+
+.detailPageWrapperContainer {
     position: relative !important;
-    z-index: 2 !important;
+    z-index: 1 !important;
 }
 
-.itemDetailsGroup {
-    padding-top: 1rem !important;
-}
-
-/* Keep Poster and Title info aligned nicely below header bar */
+/* Detail Ribbon: Flex row holding the poster and title information */
 .detailRibbon {
-    margin-top: 1rem !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 2.2rem !important;
+    margin: 0 !important;
+    padding: 0 3.3vw !important;
+    position: relative !important;
+}
+
+/* Poster / Episode Thumbnail container: Anchored properly, never cut off */
+.detailImageContainer {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .detailImageContainer .card {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    max-height: 55vh !important;
     border-radius: var(--apple-radius-card) !important;
     overflow: hidden !important;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
 }
 
-/* Title Logo / Title Header adjustments */
-.detailPagePrimaryContent {
+/* Episode view specific thumbnail ratio */
+.detailImageContainer .card:not(.overflowPortraitCard) {
+    border-radius: var(--apple-radius-card) !important;
+    max-width: 420px !important;
+}
+
+/* Right-hand Info Column (Title, Logo, Metadata Chips, Actions) */
+.infoWrapper {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. TITLE & LOGO SYSTEM (FIX: PREVENT OVERLAPPING LOGO AND TEXT)
+   -------------------------------------------------------------------------- */
+.nameContainer {
+    position: relative !important;
+    width: 100% !important;
+    margin-bottom: 0.6rem !important;
+}
+
+/* High-res Apple TV style Logo display */
+.detailLogo {
+    display: block !important;
+    height: 100px !important;
+    max-height: 120px !important;
+    width: 380px !important;
+    max-width: 100% !important;
+    background-position: left center !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    margin: 0 0 14px 0 !important;
     position: relative !important;
 }
 
-.detailLogo {
-    margin-bottom: 1.2rem !important;
-    max-height: 120px !important;
+.detailLogo.hide,
+.detailLogo[style*="display: none"] {
+    display: none !important;
 }
 
-/* Detail Primary Play Button - Solid White Apple Capsule */
+/* Clean Apple TV Logic: When a logo image exists, hide the duplicate plain text title */
+#itemDetailPage:has(.detailLogo:not(.hide):not([style*="display: none"])) .itemName,
+.infoWrapper:has(.detailLogo:not(.hide):not([style*="display: none"])) .itemName,
+.nameContainer:has(.detailLogo:not(.hide):not([style*="display: none"])) .itemName,
+.detailLogo:not(.hide):not([style*="display: none"]) ~ .itemName,
+.detailLogo:not(.hide):not([style*="display: none"]) + .itemName,
+.detailLogo:not(.hide):not([style*="display: none"]) ~ * .itemName {
+    display: none !important;
+}
+
+/* Standard Typography when no logo is present */
+.itemName {
+    font-size: 2.2rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em !important;
+    line-height: 1.2 !important;
+    margin: 0 0 8px 0 !important;
+    color: var(--apple-text-primary) !important;
+    position: relative !important;
+}
+
+.parentName {
+    font-size: 1.15rem !important;
+    font-weight: 500 !important;
+    color: var(--apple-text-secondary) !important;
+    margin-bottom: 6px !important;
+    line-height: 1.3 !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. METADATA CHIPS & ACTION BUTTONS (FIX: PREVENT VERTICAL SQUISHING)
+   -------------------------------------------------------------------------- */
+/* Metadata chips container: Full row width, wraps gracefully without breaking columns */
+.itemMiscInfo,
+.itemMiscInfo-primary {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 6px 0 14px 0 !important;
+    position: relative !important;
+}
+
+/* Individual Glass Pills */
+.itemMiscInfoItem,
+.mediaInfoItem {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    background: var(--apple-glass-pill) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    box-shadow: var(--apple-specular-top-rim) !important;
+    border-radius: var(--apple-radius-pill) !important;
+    padding: 4px 12px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    color: var(--apple-text-secondary) !important;
+    line-height: 1.4 !important;
+}
+
+.starRatingContainer {
+    color: #ffd60a !important; /* Apple Vivid Gold */
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.rtIcon,
+.imdbIcon {
+    height: 16px !important;
+    vertical-align: middle !important;
+    margin-right: 4px !important;
+}
+
+/* Action Buttons Dock (Play, Favorite, Watched, etc.) on their own row */
+.mainDetailButtons {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 10px 0 18px 0 !important;
+}
+
+/* Primary Play Capsule - Solid Apple White */
 .btnPlay {
     background: rgba(255, 255, 255, 0.95) !important;
     color: #000000 !important;
     font-weight: 600 !important;
     font-size: 1.05rem !important;
     border-radius: var(--apple-radius-pill) !important;
-    padding: 0.75rem 2.2rem !important;
+    padding: 0.72rem 2.2rem !important;
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.4) !important;
     border: none !important;
     transition: transform var(--apple-transition-fast), box-shadow var(--apple-transition-fast) !important;
@@ -468,7 +627,7 @@ body, html {
     font-weight: 600 !important;
 }
 
-/* Secondary Detail Buttons - Apple Frosted Glass Capsule */
+/* Secondary Action Glass Capsules */
 .detailButton {
     background: var(--apple-glass-pill) !important;
     backdrop-filter: blur(24px) !important;
@@ -478,7 +637,7 @@ body, html {
     border-radius: var(--apple-radius-pill) !important;
     color: var(--apple-text-primary) !important;
     transition: all var(--apple-transition-fast) !important;
-    padding: 0.65rem 1.4rem !important;
+    padding: 0.65rem 1.3rem !important;
 }
 
 .detailButton:hover {
@@ -491,28 +650,28 @@ body, html {
     transform: scale(0.96) !important;
 }
 
-/* Metadata & Overview Sections (Translucent Apple Sheet) */
-.mainDetailButtons {
-    gap: 12px !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    margin-top: 12px !important;
-    margin-bottom: 16px !important;
+/* --------------------------------------------------------------------------
+   8. DETAIL SECTIONS, MEDIA SELECTORS & SYNOPSIS (SPECULAR GLASS SHEET)
+   -------------------------------------------------------------------------- */
+.detailPagePrimaryContainer {
+    background: transparent !important;
+    padding: 0 3.3vw !important;
+    margin-top: 1.8rem !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
 .detailSection {
-    background: rgba(22, 22, 28, 0.65) !important;
+    background: var(--apple-glass-heavy) !important;
     backdrop-filter: var(--apple-blur-base) !important;
     -webkit-backdrop-filter: var(--apple-blur-base) !important;
     border: var(--apple-specular-border-subtle) !important;
     border-radius: var(--apple-radius-modal) !important;
-    box-shadow: var(--apple-specular-top-rim), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-    padding: 24px !important;
+    box-shadow: var(--apple-specular-top-rim), 0 12px 36px rgba(0, 0, 0, 0.45) !important;
+    padding: 24px 28px !important;
     margin-bottom: 24px !important;
 }
 
-/* Dropdown Selections (Audio, Subtitles, Seasons) */
 .selectContainer {
     background: transparent !important;
 }
@@ -536,48 +695,52 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   6. METADATA CHIPS, BADGES & CRITIC SCORES
+   9. EPISODE LIST & SEASON VIEWS (APPLE TV LIST CARDS)
    -------------------------------------------------------------------------- */
-.itemMiscInfo,
-.mediaInfoOfficialRating,
-.mediaInfoItem {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin-bottom: 8px !important;
-}
-
-.mediaInfoItem,
-.itemMiscInfoItem {
-    background: var(--apple-glass-pill) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+.childrenItemsContainer.itemsContainer.vertical-list .listItem {
+    background: rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
     border: var(--apple-specular-border-subtle) !important;
-    box-shadow: var(--apple-specular-top-rim) !important;
-    border-radius: var(--apple-radius-sm) !important;
-    padding: 3px 10px !important;
-    font-size: 0.85rem !important;
-    font-weight: 500 !important;
-    color: var(--apple-text-secondary) !important;
-    line-height: 1.4 !important;
+    border-radius: var(--apple-radius-card) !important;
+    margin-bottom: 12px !important;
+    padding: 14px 18px !important;
+    transition: all var(--apple-transition-fast) !important;
 }
 
-.starRatingContainer {
-    color: #ffd60a !important; /* Apple Vivid Gold */
-    display: inline-flex !important;
+.childrenItemsContainer.itemsContainer.vertical-list .listItem:hover {
+    background: rgba(255, 255, 255, 0.09) !important;
+    transform: scale(1.01) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.listItem-content {
+    display: flex !important;
     align-items: center !important;
+    gap: 18px !important;
+    width: 100% !important;
 }
 
-.rtIcon,
-.imdbIcon {
-    height: 16px !important;
-    vertical-align: middle !important;
-    margin-right: 4px !important;
+.listItemImage-large {
+    border-radius: var(--apple-radius-sm) !important;
+    overflow: hidden !important;
+    min-width: 190px !important;
+    max-width: 190px !important;
+    aspect-ratio: 16 / 9 !important;
+}
+
+.listItemBody {
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+}
+
+.listItemBodyText {
+    color: var(--apple-text-secondary) !important;
 }
 
 /* --------------------------------------------------------------------------
-   7. CAST & CREW SECTION (CIRCULAR PROFILES)
+   10. CAST & CREW SECTION (CIRCULAR PROFILES)
    -------------------------------------------------------------------------- */
 #castContent .cardScalable,
 .personCard .cardScalable {
@@ -625,7 +788,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   8. ON-SCREEN DISPLAY (OSD) VIDEO PLAYER & CONTROLS
+   11. ON-SCREEN DISPLAY (OSD) VIDEO PLAYER & CONTROLS
    -------------------------------------------------------------------------- */
 .videoOsdBottom {
     background: transparent !important;
@@ -697,7 +860,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   9. INTRO SKIPPER INTEGRATION
+   12. INTRO SKIPPER INTEGRATION
    -------------------------------------------------------------------------- */
 .skip-intro,
 .skip-button,
@@ -725,7 +888,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   10. MODALS, POPUPS, CONTEXT MENUS & DIALOGS
+   13. MODALS, POPUPS, CONTEXT MENUS & DIALOGS
    -------------------------------------------------------------------------- */
 .dialog,
 .actionSheet,
@@ -766,11 +929,23 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   11. HARDWARE ACCELERATION & RESPONSIVE COMPACT MEDIA RULES
+   14. RESPONSIVE COMPACT MEDIA RULES
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
-    .detailPagePrimaryContainer {
+    #itemDetailPage,
+    .itemDetailPage {
         padding-top: 4.5rem !important;
+    }
+
+    .detailRibbon {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1.2rem !important;
+        padding: 0 1rem !important;
+    }
+
+    .detailImageContainer .card {
+        max-height: 42vh !important;
     }
 
     .videoOsdBottom {
