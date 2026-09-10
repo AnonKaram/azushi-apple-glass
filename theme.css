@@ -1,7 +1,7 @@
 /* ==========================================================================
    AZUSHI APPLE GLASS THEME FOR JELLYFIN
    Architecture: Apple tvOS Glassmorphic Dark Design System
-   Fixed: Fullscreen 100% Bleed Backdrop, Dual Apple Glass Docks & Zero Overlap (6)
+   Fixed: 5-Button Action Dock, Zero Synopsis Overlap & Dark Cinematic Backdrop (8)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -350,9 +350,9 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   4. FULLSCREEN 100% BLEED BACKDROP ENGINE (FIX: NO BLACK BOX OVERLAY)
+   4. FULLSCREEN CINEMATIC DARK BACKDROP & PLUGIN CLEANUP (NO BLACK BOX)
    -------------------------------------------------------------------------- */
-/* Eradicate the dark scrims and opaque overlays Jellyfin injects over backdrops */
+/* Eradicate the dark scrims, opaque overlays, and plugin containers (e.g. EditorsChoice) on detail view */
 .scrim,
 .detailRibbon::after,
 .detailRibbon::before,
@@ -363,14 +363,23 @@ body, html {
 .backgroundContainer::after,
 .backgroundContainer::before,
 .detailPageWrapperContainer::before,
-.detailPageWrapperContainer::after {
+.detailPageWrapperContainer::after,
+#itemDetailPage .editorsChoice,
+#itemDetailPage .editorsChoiceBanner,
+#itemDetailPage .editors-choice-container,
+#itemDetailPage .editorsChoiceContainer,
+#itemDetailPage .hero-banner-container,
+#itemDetailPage [class*="editorschoice"],
+#itemDetailPage [class*="EditorsChoice"],
+#itemDetailPage [id*="editorschoice"],
+#itemDetailPage [id*="EditorsChoice"] {
     display: none !important;
     opacity: 0 !important;
     background: transparent !important;
     background-color: transparent !important;
 }
 
-/* Transparent wrapper hierarchy so the full backdrop is visible behind every element */
+/* Transparent wrapper hierarchy so the backdrop displays throughout */
 #itemDetailPage,
 .itemDetailPage,
 .mainAnimatedPages,
@@ -380,14 +389,14 @@ body, html {
 .detailRibbon,
 .detailRibbon.padded-left,
 .detailRibbon.padded-right,
-.detailPagePrimaryContainer,
-.detailPagePrimaryContent,
-.detailPageSecondaryContainer {
+.detailPagePrimaryContainer {
     background: transparent !important;
     background-color: transparent !important;
     transform: none !important;
     contain: none !important;
     perspective: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 /* Background container base */
@@ -405,7 +414,7 @@ body, html {
     pointer-events: none !important;
 }
 
-/* The backdrop image now covers 100% of the entire screen from top to bottom */
+/* Rich, moody Apple dark backdrop: smooth subtle gradient fade while preserving darkness */
 .backdropImage,
 .backgroundContainer.withBackdrop,
 .detailPageBackdrop,
@@ -420,9 +429,17 @@ body, html {
     background-size: cover !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
-    filter: brightness(0.60) saturate(130%) !important;
-    mask-image: none !important;
-    -webkit-mask-image: none !important;
+    filter: brightness(0.48) saturate(135%) contrast(105%) !important;
+    mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.95) 0%, 
+        rgba(0, 0, 0, 0.85) 45%, 
+        rgba(0, 0, 0, 0.60) 75%, 
+        rgba(0, 0, 0, 0.40) 100%) !important;
+    -webkit-mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.95) 0%, 
+        rgba(0, 0, 0, 0.85) 45%, 
+        rgba(0, 0, 0, 0.60) 75%, 
+        rgba(0, 0, 0, 0.40) 100%) !important;
     z-index: -1 !important;
     pointer-events: none !important;
 }
@@ -441,14 +458,14 @@ body, html {
     z-index: 2 !important;
 }
 
-/* Top ribbon container holding poster, metadata glass dock, and actions glass dock */
+/* Ribbon container holding poster, metadata dock, and action button dock */
 .detailRibbon {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: wrap !important;
     align-items: flex-start !important;
-    gap: 1.8rem !important;
-    margin: 0 0 2rem 0 !important;
+    gap: 1.6rem !important;
+    margin: 0 0 1.2rem 0 !important;
     padding: 0 3.3vw !important;
     position: relative !important;
 }
@@ -466,7 +483,7 @@ body, html {
     position: relative !important;
     top: 0 !important;
     margin: 0 !important;
-    max-height: 52vh !important;
+    max-height: 48vh !important;
     border-radius: var(--apple-radius-card) !important;
     overflow: hidden !important;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
@@ -474,7 +491,7 @@ body, html {
 
 .detailImageContainer .card:not(.overflowPortraitCard) {
     border-radius: var(--apple-radius-card) !important;
-    max-width: 400px !important;
+    max-width: 380px !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -631,36 +648,53 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   9. DOCK 2: APPLE TV ACTION BUTTONS GLASS DOCK (PLAY, TRAILER, SHUFFLE, ETC)
+   9. DOCK 2: ACTION BUTTONS DOCK (STRICT 5-BUTTON APPLE TV GLASS DOCK)
    -------------------------------------------------------------------------- */
-/* Matching Apple Glass Dock card enclosing the action buttons */
+/* Hide all extra clutter buttons: Download, Replay, Bookmark, Compass, Shuffle, Delete, Stop, Syncplay */
+.mainDetailButtons [data-action="download"],
+.mainDetailButtons [data-action="replay"],
+.mainDetailButtons [data-action="bookmark"],
+.mainDetailButtons [data-action="explore"],
+.mainDetailButtons [data-action="shuffle"],
+.mainDetailButtons [data-action="delete"],
+.mainDetailButtons [data-action="stop"],
+.mainDetailButtons [data-action="syncplay"],
+.mainDetailButtons .btnDownload,
+.mainDetailButtons .btnShuffle,
+.mainDetailButtons .btnSyncPlay,
+.mainDetailButtons .btnDelete,
+.mainDetailButtons .btnRecord,
+.mainDetailButtons .btnInstantMix {
+    display: none !important;
+}
+
+/* Dedicated Apple Glass Dock card enclosing ONLY the 5 required action buttons */
 .mainDetailButtons {
     flex: 0 0 auto !important;
     display: inline-flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap !important;
     align-items: center !important;
-    gap: 14px !important;
+    gap: 12px !important;
     background: rgba(22, 22, 28, 0.55) !important;
     backdrop-filter: blur(28px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
     border: var(--apple-specular-border-subtle) !important;
     box-shadow: var(--apple-specular-top-rim), 0 12px 36px rgba(0, 0, 0, 0.5) !important;
     border-radius: var(--apple-radius-modal) !important;
-    padding: 16px 24px !important;
+    padding: 12px 20px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
 }
 
-/* Primary Play Button - Glowing Solid White Apple Capsule */
+/* 1. Primary Play Button - Glowing Solid White Apple Capsule */
 .btnPlay {
     background: rgba(255, 255, 255, 0.96) !important;
     color: #000000 !important;
     font-weight: 700 !important;
-    font-size: 1.05rem !important;
+    font-size: 1.02rem !important;
     letter-spacing: -0.01em !important;
     border-radius: var(--apple-radius-pill) !important;
-    padding: 0.72rem 2.2rem !important;
+    padding: 0.65rem 1.8rem !important;
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.45), 0 2px 8px rgba(0, 0, 0, 0.4) !important;
     border: none !important;
     display: inline-flex !important;
@@ -688,12 +722,12 @@ body, html {
     font-weight: 700 !important;
 }
 
-/* Secondary Action Buttons (Trailer, Shuffle, Mark Watched, Favorite, More) */
+/* 2. Trailer, 3. Watched, 4. Favorite, 5. More Secondary Buttons */
 .detailButton,
 .mainDetailButtons .paper-icon-button-light {
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
     border-radius: 50% !important;
     background: rgba(255, 255, 255, 0.12) !important;
     backdrop-filter: blur(20px) !important;
@@ -723,13 +757,12 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   10. LOWER SECTIONS (FIX: PUSHED DOWN WITH ZERO OVERLAP ON SYNOPSIS)
+   10. LOWER SECTIONS (FIX: COMPLETE CLEARANCE & ZERO SYNOPSIS OVERLAP)
    -------------------------------------------------------------------------- */
 /* Push the entire synopsis & media selectors well below the docks */
 .detailPagePrimaryContainer {
     background: transparent !important;
     padding: 0 3.3vw !important;
-    margin-top: 2.2rem !important;
     clear: both !important;
     position: relative !important;
     z-index: 2 !important;
@@ -740,6 +773,8 @@ body, html {
 .detailPagePrimaryContent {
     background: transparent !important;
     width: 100% !important;
+    margin-top: 3.2rem !important;
+    clear: both !important;
     position: relative !important;
 }
 
