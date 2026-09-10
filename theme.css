@@ -18,33 +18,33 @@
     --apple-glass-subtle: rgba(255, 255, 255, 0.06);
     --apple-glass-pill: rgba(255, 255, 255, 0.12);
     --apple-glass-pill-hover: rgba(255, 255, 255, 0.22);
-    
+
     /* Dynamic Apple tvOS Highlights & Borders */
     --apple-specular-border: 1px solid rgba(255, 255, 255, 0.16);
     --apple-specular-border-subtle: 1px solid rgba(255, 255, 255, 0.08);
     --apple-specular-glow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.6);
     --apple-specular-top-rim: inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
-    
+
     /* Text & Contrasts */
     --apple-text-primary: #f5f5f7;
     --apple-text-secondary: rgba(235, 235, 245, 0.65);
     --apple-text-tertiary: rgba(235, 235, 245, 0.38);
     --apple-accent: #ffffff;
     --apple-accent-contrast: #000000;
-    
+
     /* Curvatures (Apple tvOS Standards) */
     --apple-radius-sm: 8px;
     --apple-radius-card: 14px;
     --apple-radius-pill: 9999px;
     --apple-radius-modal: 20px;
     --apple-radius-player: 28px;
-    
+
     /* Physics & Animation Curves */
     --apple-ease: cubic-bezier(0.16, 1, 0.3, 1);
     --apple-transition-fast: 0.18s var(--apple-ease);
     --apple-transition-norm: 0.32s var(--apple-ease);
     --apple-transition-slow: 0.48s var(--apple-ease);
-    
+
     /* Glass Backdrops */
     --apple-blur-base: blur(28px) saturate(180%);
     --apple-blur-hud: blur(36px) saturate(200%);
@@ -91,20 +91,33 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   2. HEADER, SIDEBAR DRAWER & GLOBAL NAVIGATION
+   2. HEADER & NAVIGATION (TRANSPARENT TOPBAR & FLOATING GLASS TABS)
    -------------------------------------------------------------------------- */
+/* Fully transparent header so hero artwork flows behind it seamlessly */
 .skinHeader,
 .mainHeader {
-    background: var(--apple-glass-heavy) !important;
-    backdrop-filter: var(--apple-blur-base) !important;
-    -webkit-backdrop-filter: var(--apple-blur-base) !important;
-    border-bottom: var(--apple-specular-border-subtle) !important;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
+    background: transparent !important;
+    background-image: linear-gradient(180deg, rgba(7, 7, 10, 0.75) 0%, rgba(7, 7, 10, 0) 100%) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
     transition: background var(--apple-transition-norm) !important;
 }
 
-.headerTabsSection {
-    background: transparent !important;
+/* Breadcrumbs / Page Title Placement in Top Bar */
+.headerHomeButton {
+    color: var(--apple-text-primary) !important;
+}
+
+.headerSelectedTab,
+.headerButton {
+    color: var(--apple-text-primary) !important;
 }
 
 /* Header buttons & Action Icons */
@@ -122,6 +135,70 @@ body, html {
 
 .headerButton:active {
     transform: scale(0.95) !important;
+}
+
+/* Apple tvOS Floating Pill Tab Navigation Bar (Home, Favorites, Request, Watchlist) */
+.headerTabsSection {
+    background: transparent !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: 6px !important;
+}
+
+.headerTabs,
+.emby-tabs-slider {
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: rgba(24, 24, 30, 0.65) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: var(--apple-specular-border-subtle) !important;
+    box-shadow: var(--apple-specular-top-rim), 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+    border-radius: var(--apple-radius-pill) !important;
+    padding: 4px 6px !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    margin: 0 auto !important;
+}
+
+.emby-tab-button {
+    background: transparent !important;
+    border-radius: var(--apple-radius-pill) !important;
+    padding: 6px 18px !important;
+    margin: 0 3px !important;
+    font-size: 0.92rem !important;
+    font-weight: 500 !important;
+    color: var(--apple-text-secondary) !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: all var(--apple-transition-fast) !important;
+    cursor: pointer !important;
+}
+
+.emby-tab-button:hover {
+    background: var(--apple-glass-pill) !important;
+    color: #ffffff !important;
+    transform: scale(1.04) !important;
+}
+
+/* Active Tab in Pill Dock */
+.emby-tab-button-active {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 12px rgba(255, 255, 255, 0.35) !important;
+}
+
+.emby-tab-button-active .emby-button-foreground {
+    color: #000000 !important;
+}
+
+.emby-tab-button-active:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
 }
 
 /* Navigation Drawer / Sidebar */
@@ -153,7 +230,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   3. CARDS, POSTERS, THUMBNAILS & PARALLAX HOVER PHYSICS
+   3. CARDS, POSTERS & APPLE HOVER PHYSICS (NO MILKY / BLUE BLUR BLOB)
    -------------------------------------------------------------------------- */
 .cardBox {
     background: transparent !important;
@@ -171,19 +248,24 @@ body, html {
     background: var(--apple-bg-card) !important;
 }
 
+/* Card image keeps full clarity on hover without heavy blur */
+.cardImageContainer {
+    border-radius: var(--apple-radius-card) !important;
+}
+
+.cardImage {
+    transition: transform var(--apple-transition-norm), filter var(--apple-transition-norm) !important;
+}
+
 /* Apple tvOS 3D Parallax Hover Lift */
 .card:hover .cardScalable {
-    transform: translateY(-8px) scale(1.035) !important;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.28), var(--apple-specular-top-rim) !important;
+    transform: translateY(-8px) scale(1.04) !important;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.28), var(--apple-specular-top-rim) !important;
 }
 
 .card:active .cardScalable {
     transform: translateY(-2px) scale(1.00) !important;
     transition-duration: 0.08s !important;
-}
-
-.cardImageContainer {
-    border-radius: var(--apple-radius-card) !important;
 }
 
 /* Card Titles and Footers */
@@ -229,22 +311,23 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   4. CARD OVERLAYS & APPLE PLAY BUTTON (REPLACING GREEN ACCENTS)
+   4. CARD OVERLAYS: SPECULAR GLASS GRADIENT (REPLACING BLUE/BLUR OVERLAYS)
    -------------------------------------------------------------------------- */
+/* Subtle dark vignette overlay that maintains poster clarity instead of full blur */
 .cardOverlayContainer {
-    background: rgba(0, 0, 0, 0.4) !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.6) 100%) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border-radius: var(--apple-radius-card) !important;
     transition: opacity var(--apple-transition-fast) !important;
 }
 
-/* Authentic Solid Apple Play Button */
+/* Solid White Apple Play Button */
 .cardOverlayFab-primary {
     background: rgba(255, 255, 255, 0.95) !important;
     color: #000000 !important;
     border: none !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.4) !important;
     border-radius: 50% !important;
     transition: transform var(--apple-transition-fast), background-color var(--apple-transition-fast) !important;
 }
@@ -252,7 +335,7 @@ body, html {
 .cardOverlayFab-primary:hover {
     background: #ffffff !important;
     transform: scale(1.15) !important;
-    box-shadow: 0 10px 28px rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 10px 28px rgba(255, 255, 255, 0.6) !important;
 }
 
 .cardOverlayFab-primary:active {
@@ -280,28 +363,46 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   5. MOVIE & TV DETAIL PAGE (TWO-COLUMN ARCHITECTURE PRESERVED)
+   5. DETAIL PAGE & BACKDROP FADE (CLEAN TEXT MASKING & LOGO PLACEMENT)
    -------------------------------------------------------------------------- */
 .detailPageWrapperContainer {
     background: transparent !important;
 }
 
-/* Backdrop Image Masking */
-.detailPageBackdrop {
+/* Backdrop Image - Positioned from the top and smoothly fading out into black right around text area */
+.backdropContainer,
+.detailPageBackdrop,
+.itemBackdrop {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    height: 100vh !important;
-    filter: brightness(0.48) saturate(130%) blur(2px) !important;
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0.1) 90%, rgba(0,0,0,0) 100%) !important;
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0.1) 90%, rgba(0,0,0,0) 100%) !important;
+    height: 85vh !important;
+    background-size: cover !important;
+    background-position: top center !important;
+    filter: brightness(0.65) saturate(125%) !important;
+    mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 40%, 
+        rgba(0, 0, 0, 0.5) 65%, 
+        rgba(0, 0, 0, 0.15) 82%, 
+        rgba(0, 0, 0, 0) 100%) !important;
+    -webkit-mask-image: linear-gradient(180deg, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 40%, 
+        rgba(0, 0, 0, 0.5) 65%, 
+        rgba(0, 0, 0, 0.15) 82%, 
+        rgba(0, 0, 0, 0) 100%) !important;
     z-index: -1 !important;
+    pointer-events: none !important;
 }
 
+/* Prevent abrupt cutoffs below the backdrop */
 .detailPagePrimaryContainer {
     background: transparent !important;
-    padding-top: 4vh !important;
+    padding-top: 5vh !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 /* Detail Primary Play Button - Solid White Apple Capsule */
@@ -357,7 +458,7 @@ body, html {
     transform: scale(0.96) !important;
 }
 
-/* Metadata Containers & Glass Panels */
+/* Metadata & Overview Sections (Translucent Apple Sheet) */
 .mainDetailButtons {
     gap: 12px !important;
     display: flex !important;
@@ -366,7 +467,7 @@ body, html {
 }
 
 .detailSection {
-    background: var(--apple-glass-medium) !important;
+    background: rgba(22, 22, 28, 0.65) !important;
     backdrop-filter: var(--apple-blur-base) !important;
     -webkit-backdrop-filter: var(--apple-blur-base) !important;
     border: var(--apple-specular-border-subtle) !important;
@@ -411,7 +512,6 @@ body, html {
     gap: 8px !important;
 }
 
-/* Apple tvOS Pill Badge Architecture */
 .mediaInfoItem,
 .itemMiscInfoItem {
     background: var(--apple-glass-pill) !important;
@@ -427,7 +527,6 @@ body, html {
     line-height: 1.4 !important;
 }
 
-/* Star / Critic Ratings Styling */
 .starRatingContainer {
     color: #ffd60a !important; /* Apple Vivid Gold */
     display: inline-flex !important;
@@ -442,7 +541,7 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   7. CAST & CREW SECTION (CIRCULAR PROFILES PRESERVED)
+   7. CAST & CREW SECTION (CIRCULAR PROFILES: ZOOM & GLOW WITHOUT BLUR)
    -------------------------------------------------------------------------- */
 #castContent .cardScalable,
 .personCard .cardScalable {
@@ -451,12 +550,28 @@ body, html {
     border: var(--apple-specular-border) !important;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45) !important;
     transition: transform var(--apple-transition-norm), box-shadow var(--apple-transition-norm) !important;
+    overflow: hidden !important;
+    background: transparent !important;
 }
 
+/* Disable the overlay completely on cast circles so faces are never blurred */
+#castContent .cardOverlayContainer,
+.personCard .cardOverlayContainer {
+    display: none !important;
+}
+
+/* Hover: Scale up smoothly with specular white halo ring */
 #castContent .card:hover .cardScalable,
 .personCard:hover .cardScalable {
-    transform: scale(1.08) translateY(-4px) !important;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(255, 255, 255, 0.35) !important;
+    transform: scale(1.12) translateY(-4px) !important;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85), 0 16px 36px rgba(0, 0, 0, 0.75) !important;
+}
+
+#castContent .cardImage,
+.personCard .cardImage {
+    filter: none !important;
+    backdrop-filter: none !important;
+    transition: transform var(--apple-transition-norm) !important;
 }
 
 #castContent .cardImageContainer,
@@ -478,7 +593,6 @@ body, html {
 /* --------------------------------------------------------------------------
    8. ON-SCREEN DISPLAY (OSD) VIDEO PLAYER & CONTROLS
    -------------------------------------------------------------------------- */
-/* Floating Glass Island Player HUD */
 .videoOsdBottom {
     background: transparent !important;
     padding: 0 2rem 2rem 2rem !important;
@@ -496,13 +610,11 @@ body, html {
     margin: 0 auto !important;
 }
 
-/* Header overlay in player */
 .videoOsdHeader {
     background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%) !important;
     padding: 1.5rem 2rem !important;
 }
 
-/* Progress Bar / Scrubber Track */
 .sliderBubble {
     background: var(--apple-glass-heavy) !important;
     backdrop-filter: blur(16px) !important;
@@ -522,7 +634,6 @@ body, html {
     background-color: rgba(255, 255, 255, 0.22) !important;
 }
 
-/* Apple Solid Thumb */
 .mdl-slider::-webkit-slider-thumb {
     background: #ffffff !important;
     width: 16px !important;
@@ -536,7 +647,6 @@ body, html {
     transform: scale(1.3) !important;
 }
 
-/* Player Button States */
 .osdControls .paper-icon-button-light {
     color: var(--apple-text-primary) !important;
     border-radius: var(--apple-radius-pill) !important;
@@ -604,7 +714,6 @@ body, html {
     background: var(--apple-glass-pill) !important;
 }
 
-/* Inputs and Text Fields */
 .emby-input,
 .emby-textarea {
     background: var(--apple-glass-pill) !important;
@@ -629,12 +738,12 @@ body, html {
     .videoOsdBottom {
         padding: 0 0.8rem 0.8rem 0.8rem !important;
     }
-    
+
     .videoOsdBottomContent {
         border-radius: var(--apple-radius-card) !important;
         padding: 0.8rem 1rem !important;
     }
-    
+
     .detailSection {
         padding: 16px !important;
     }
