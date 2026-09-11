@@ -573,6 +573,17 @@ body {
     font-size: x-small;
 }
 
+/* ==========================================================================
+   NEUTRALFIN → APPLE TV GLASS
+   STEP 1A — SERIES MAIN PAGE EPISODE ARRANGEMENT
+   --------------------------------------------------------------------------
+   Targeted fix: only the children/episode section on a Series detail page.
+   The shared episode-grid rules and Season detail pages are left alone.
+   ========================================================================== */
+#itemDetailPage:has(.detailLogo) .detailSection > #listChildrenCollapsible {
+    grid-column: 1 / -1;
+}
+
 /* episode grid start */
 
 @supports (display: revert) {
