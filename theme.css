@@ -63,6 +63,18 @@ body, html {
     text-rendering: optimizeLegibility !important;
 }
 
+/* Defensive pin: make sure icon glyphs always use the Material Icons
+   font specifically, never the San Francisco text font above. If the
+   Material Icons font briefly fails to load, the browser shows raw
+   ligature text (e.g. "play_arrow") or tofu glyphs - that's a font
+   delivery hiccup, not something this stylesheet can fix by itself,
+   but this rule guarantees our own CSS is never the cause of it.  */
+.material-icons {
+    font-family: "Material Icons" !important;
+    font-style: normal !important;
+    speak: none !important;
+}
+
 ::selection {
     background-color: rgba(255, 255, 255, 0.3) !important;
     color: #ffffff !important;
@@ -414,11 +426,16 @@ body, html {
     pointer-events: none !important;
 }
 
-/* Rich, moody Apple dark backdrop: smooth subtle gradient fade while preserving darkness */
+/* Rich, moody Apple dark backdrop. NOTE: this used to rely on CSS
+   mask-image for the fade effect - that property can silently fail to
+   render in some Jellyfin client webviews/browsers, which is what made
+   the backdrop vanish everywhere. Replaced with plain filter() darkening
+   (rock-solid support) plus a separate gradient overlay below. */
 .backdropImage,
 .backgroundContainer.withBackdrop,
 .detailPageBackdrop,
-.itemBackdrop {
+.itemBackdrop,
+#itemBackdrop {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -426,22 +443,69 @@ body, html {
     bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
+    max-height: none !important;
+    min-height: 0 !important;
     background-size: cover !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
-    filter: brightness(0.48) saturate(135%) contrast(105%) !important;
-    mask-image: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.95) 0%, 
-        rgba(0, 0, 0, 0.85) 45%, 
-        rgba(0, 0, 0, 0.60) 75%, 
-        rgba(0, 0, 0, 0.40) 100%) !important;
-    -webkit-mask-image: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.95) 0%, 
-        rgba(0, 0, 0, 0.85) 45%, 
-        rgba(0, 0, 0, 0.60) 75%, 
-        rgba(0, 0, 0, 0.40) 100%) !important;
+    background-color: transparent !important;
+    /* Darker, more cinematic (Apple TV style) grade */
+    filter: brightness(0.32) saturate(120%) contrast(108%) !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    z-index: -2 !important;
+    pointer-events: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    contain: none !important;
+    clip-path: none !important;
+}
+
+/* Cinematic top-to-bottom fade, done as a plain gradient overlay instead
+   of a mask so it can never fail to render. Sits above the backdrop image
+   (z-index -2) and below all real page content (z-index auto/0+). */
+body::before {
+    content: "" !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: linear-gradient(180deg,
+        rgba(7, 7, 10, 0.10) 0%,
+        rgba(7, 7, 10, 0.45) 45%,
+        rgba(7, 7, 10, 0.75) 78%,
+        rgba(7, 7, 10, 0.93) 100%) !important;
     z-index: -1 !important;
     pointer-events: none !important;
+}
+
+/* Extra safety net: neutralize any wrapper that could clip or box the
+   fixed backdrop (creates the "black box" look). Any element that gets
+   a CSS transform/filter/contain becomes a new containing block for
+   position:fixed children, which traps the backdrop inside it. */
+#itemDetailPage,
+.itemDetailPage,
+.detailPageWrapperContainer,
+.detailPagePrimaryContainer,
+.detailPageSecondaryContainer,
+.noBackdropTransparency .detailPageSecondaryContainer,
+.mainAnimatedPages,
+.skinBody,
+.view,
+.page,
+.pageContainer,
+.content-primary {
+    background: transparent !important;
+    background-color: transparent !important;
+    transform: none !important;
+    filter: none !important;
+    contain: none !important;
+    perspective: none !important;
+    will-change: auto !important;
+    box-shadow: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -449,7 +513,7 @@ body, html {
    -------------------------------------------------------------------------- */
 #itemDetailPage,
 .itemDetailPage {
-    padding-top: 5.2rem !important;
+    padding-top: 4.2rem !important;
     box-sizing: border-box !important;
 }
 
@@ -458,48 +522,87 @@ body, html {
     z-index: 2 !important;
 }
 
-/* Ribbon container holding poster, metadata dock, and action button dock */
+/* Ribbon container holding poster, metadata dock, and action button dock.
+   Grid keeps the poster locked to the left while the title dock and the
+   button dock stack cleanly in the right column, no matter how the
+   content wraps. */
 .detailRibbon {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    align-items: flex-start !important;
-    gap: 1.6rem !important;
-    margin: 0 0 1.2rem 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(180px, 260px) minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    align-items: start !important;
+    column-gap: 1.4rem !important;
+    row-gap: 0.6rem !important;
+    margin: 0.4rem 0 1rem 0 !important;
     padding: 0 3.3vw !important;
     position: relative !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-/* Poster Card */
+/* Poster Card - spans both rows so it sits beside the title + button docks */
 .detailImageContainer {
-    flex: 0 0 auto !important;
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
     position: relative !important;
     top: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
 }
 
+/* Framed, square-ish tile instead of a tall rectangle: the box itself is
+   near-square, the poster image is inset with object-fit:contain so it
+   never gets cropped or stretched, and a visible border/matte frames it
+   on the sides where the portrait image doesn't fill the full width. */
 .detailImageContainer .card {
     position: relative !important;
     top: 0 !important;
     margin: 0 !important;
-    max-height: 48vh !important;
+    width: 100% !important;
+    max-width: 260px !important;
+    aspect-ratio: 4 / 5 !important;
+    height: auto !important;
+    max-height: none !important;
     border-radius: var(--apple-radius-card) !important;
     overflow: hidden !important;
-    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.10) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .detailImageContainer .card:not(.overflowPortraitCard) {
     border-radius: var(--apple-radius-card) !important;
-    max-width: 380px !important;
+    max-width: 260px !important;
+}
+
+.detailImageContainer .cardImageContainer,
+.detailImageContainer .cardContent,
+.detailImageContainer .cardBox {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.detailImageContainer .cardImage {
+    width: 100% !important;
+    height: 100% !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    object-fit: contain !important;
 }
 
 /* --------------------------------------------------------------------------
    6. DOCK 1: APPLE TV TITLE & METADATA GLASS DOCK
    -------------------------------------------------------------------------- */
 .infoWrapper {
-    flex: 1 1 360px !important;
-    max-width: 580px !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: flex-start !important;
@@ -514,6 +617,7 @@ body, html {
     padding: 22px 28px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -607,10 +711,14 @@ body, html {
     flex-direction: row !important;
     flex-wrap: wrap !important;
     align-items: center !important;
-    gap: 8px 10px !important;
+    justify-content: flex-start !important;
+    gap: 10px 10px !important;
     width: 100% !important;
-    margin: 4px 0 0 0 !important;
+    max-width: 100% !important;
+    margin: 6px 0 0 0 !important;
+    padding: 0 !important;
     position: relative !important;
+    box-sizing: border-box !important;
 }
 
 .itemMiscInfoItem,
@@ -648,33 +756,48 @@ body, html {
 }
 
 /* --------------------------------------------------------------------------
-   9. DOCK 2: ACTION BUTTONS DOCK (STRICT 5-BUTTON APPLE TV GLASS DOCK)
+   9. DOCK 2: ACTION BUTTONS DOCK (STRICT 6-BUTTON APPLE TV GLASS DOCK)
+   Play / Shuffle / Trailer / Mark Watched / Favorite / More - in that order
    -------------------------------------------------------------------------- */
-/* Hide all extra clutter buttons: Download, Replay, Bookmark, Compass, Shuffle, Delete, Stop, Syncplay */
-.mainDetailButtons [data-action="download"],
-.mainDetailButtons [data-action="replay"],
-.mainDetailButtons [data-action="bookmark"],
-.mainDetailButtons [data-action="explore"],
-.mainDetailButtons [data-action="shuffle"],
-.mainDetailButtons [data-action="delete"],
-.mainDetailButtons [data-action="stop"],
-.mainDetailButtons [data-action="syncplay"],
-.mainDetailButtons .btnDownload,
-.mainDetailButtons .btnShuffle,
-.mainDetailButtons .btnSyncPlay,
-.mainDetailButtons .btnDelete,
-.mainDetailButtons .btnRecord,
-.mainDetailButtons .btnInstantMix {
+/* Whitelist approach with HIGH specificity: previous attempt used plain
+   class selectors which tie with Jellyfin's own core CSS at the same
+   specificity - whichever stylesheet loads later then wins, which is why
+   every button kept showing. Prefixing with #itemDetailPage makes our
+   rule specificity far higher than the core styles, so it always wins
+   regardless of load order. We hide everything that is NOT one of the
+   6 wanted buttons - this also automatically covers buttons we don't
+   know the exact class name for (bookmark/compass/stop/scissors/etc). */
+#itemDetailPage .mainDetailButtons > button:not(.btnPlay):not(.btnShuffle):not(.btnPlayTrailer):not(.btnPlaystate):not(.btnUserRating):not(.btnMoreCommands),
+#itemDetailPage .mainDetailButtons > .paper-icon-button-light:not(.btnPlay):not(.btnShuffle):not(.btnPlayTrailer):not(.btnPlaystate):not(.btnUserRating):not(.btnMoreCommands) {
     display: none !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none !important;
 }
 
-/* Dedicated Apple Glass Dock card enclosing ONLY the 5 required action buttons */
-.mainDetailButtons {
-    flex: 0 0 auto !important;
+/* Order only (does not force visibility - lets Jellyfin's own logic still
+   hide e.g. Favorite/Watched on items that don't support them) */
+#itemDetailPage .mainDetailButtons > .btnPlay          { order: 1 !important; }
+#itemDetailPage .mainDetailButtons > .btnShuffle       { order: 2 !important; }
+#itemDetailPage .mainDetailButtons > .btnPlayTrailer   { order: 3 !important; }
+#itemDetailPage .mainDetailButtons > .btnPlaystate     { order: 4 !important; }
+#itemDetailPage .mainDetailButtons > .btnUserRating    { order: 5 !important; }
+#itemDetailPage .mainDetailButtons > .btnMoreCommands  { order: 6 !important; }
+
+/* Dedicated Apple Glass Dock card - sits under the title dock, in the grid's
+   right column, sized to fit its content instead of stretching full width */
+#itemDetailPage .mainDetailButtons {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
     display: inline-flex !important;
     flex-direction: row !important;
+    flex-wrap: nowrap !important;
     align-items: center !important;
+    justify-content: flex-start !important;
     gap: 12px !important;
+    width: max-content !important;
+    max-width: 100% !important;
     background: rgba(22, 22, 28, 0.55) !important;
     backdrop-filter: blur(28px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
@@ -684,6 +807,7 @@ body, html {
     padding: 12px 20px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 /* 1. Primary Play Button - Glowing Solid White Apple Capsule */
@@ -767,18 +891,27 @@ body, html {
     position: relative !important;
     z-index: 2 !important;
     width: 100% !important;
+    max-width: 100vw !important;
     box-sizing: border-box !important;
+    overflow-x: hidden !important;
 }
 
 .detailPagePrimaryContent {
     background: transparent !important;
     width: 100% !important;
+    max-width: 100% !important;
     margin-top: 3.2rem !important;
     clear: both !important;
     position: relative !important;
+    box-sizing: border-box !important;
 }
 
-/* Frosted glass panel for Video, Audio, Subtitles, and Synopsis */
+/* Frosted glass panel for Video, Audio, Subtitles, and Synopsis
+   NOTE: overflow must stay visible here - the season/episode selector
+   dropdown renders inside this same panel on Series pages, and hiding
+   overflow clips/traps that popover, which is what broke clicking on
+   the middle season options. The synopsis text itself is protected from
+   horizontal bleed separately below via word-break on .overview. */
 .detailSection {
     background: var(--apple-glass-heavy) !important;
     backdrop-filter: var(--apple-blur-base) !important;
@@ -791,6 +924,36 @@ body, html {
     margin-bottom: 24px !important;
     position: relative !important;
     box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+/* The synopsis text itself: never let it run past the page edge,
+   regardless of which parent container it happens to render in
+   (this is what was sliding right on Show/Season pages) */
+.overview,
+.tagline {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: clamp(12px, 3vw, 32px) !important;
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
+
+/* Global safety net against horizontal scroll/overflow on the detail page */
+html, body {
+    overflow-x: hidden !important;
+}
+
+#itemDetailPage,
+.itemDetailPage {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
 }
 
 /* Dropdowns inside synopsis card */
@@ -850,8 +1013,17 @@ button[is="emby-select"] {
     transform: scale(1.04) translateY(-1px) !important;
 }
 
-/* Season Action Sheet / Dropdown Menu */
+/* Season Action Sheet / Dropdown Menu
+   FIX for "can only select first/last season": this popover needs to sit
+   in its own fixed, isolated stacking context well above everything else.
+   Without an explicit position + very high z-index, a season-card that
+   gets its own stacking context on hover (from the scale/translate
+   effect above) can end up winning the hit-test for the area where the
+   popover visually overlaps it, so clicks on the *middle* rows (which
+   overlap season cards) fall through to the card underneath while the
+   first/last rows (which happen to overlap empty space) still work. */
 .actionSheet {
+    position: fixed !important;
     background: var(--apple-glass-heavy) !important;
     backdrop-filter: var(--apple-blur-hud) !important;
     -webkit-backdrop-filter: var(--apple-blur-hud) !important;
@@ -859,11 +1031,20 @@ button[is="emby-select"] {
     box-shadow: var(--apple-specular-top-rim), 0 24px 64px rgba(0, 0, 0, 0.85) !important;
     border-radius: var(--apple-radius-modal) !important;
     padding: 10px !important;
-    z-index: 1000 !important;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    isolation: isolate !important;
+}
+
+.actionSheetScroller {
+    position: relative !important;
+    z-index: 1 !important;
     pointer-events: auto !important;
 }
 
 .actionSheetMenuItem {
+    position: relative !important;
+    z-index: 2 !important;
     border-radius: var(--apple-radius-sm) !important;
     margin: 4px 6px !important;
     padding: 12px 18px !important;
@@ -872,12 +1053,11 @@ button[is="emby-select"] {
     color: var(--apple-text-primary) !important;
     cursor: pointer !important;
     pointer-events: auto !important;
-    transition: all var(--apple-transition-fast) !important;
+    transition: background var(--apple-transition-fast) !important;
 }
 
 .actionSheetMenuItem:hover {
     background: var(--apple-glass-pill) !important;
-    transform: translateX(4px) !important;
 }
 
 .actionSheetMenuItem.selected,
@@ -885,6 +1065,27 @@ button[is="emby-select"] {
     background: rgba(255, 255, 255, 0.22) !important;
     font-weight: 600 !important;
     box-shadow: var(--apple-specular-top-rim) !important;
+}
+
+/* Any backdrop/scrim Jellyfin renders behind the sheet: keep it just
+   below the sheet but well above the page, so it intercepts stray
+   clicks around the sheet instead of letting them reach the cards. */
+.dialogBackdrop,
+.actionSheetBackdrop,
+.overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99998 !important;
+    pointer-events: auto !important;
+}
+
+/* Keep season/episode cards in the normal, low stacking layer so they
+   can never out-rank the dropdown above them */
+.itemsContainer,
+.emby-scroller,
+.childrenItemsContainer {
+    position: relative !important;
+    z-index: 0 !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1121,21 +1322,44 @@ button[is="emby-select"] {
     }
 
     .detailRibbon {
-        flex-direction: column !important;
-        align-items: center !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto auto auto !important;
+        justify-items: center !important;
         gap: 1.2rem !important;
         padding: 0 1rem !important;
     }
 
-    .detailImageContainer .card {
-        max-height: 40vh !important;
+    .detailImageContainer {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
     }
 
-    .infoWrapper,
-    .mainDetailButtons {
+    .detailImageContainer .card {
+        max-width: 220px !important;
+    }
+
+    .infoWrapper {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+        align-items: center !important;
+        text-align: center !important;
         width: 100% !important;
         max-width: 100% !important;
         padding: 16px 20px !important;
+    }
+
+    .itemMiscInfo,
+    .itemMiscInfo-primary {
+        justify-content: center !important;
+    }
+
+    .mainDetailButtons {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+        width: fit-content !important;
+        max-width: 100% !important;
+        justify-content: center !important;
+        padding: 12px 16px !important;
     }
 
     .videoOsdBottom {
